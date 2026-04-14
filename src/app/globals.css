@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: #0a0f1a;
+  --color-foreground: #e8edf5;
+  --color-card: #111827;
+  --color-card-hover: #1a2332;
+  --color-border: #1e293b;
+  --color-accent: #10b981;
+  --color-accent-light: #34d399;
+  --color-gold: #f59e0b;
+  --color-gold-light: #fbbf24;
+  --color-danger: #ef4444;
+  --color-muted: #64748b;
+  --color-surface: #0f172a;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-muted);
+}
+
+/* Probability bar animation */
+@keyframes fillBar {
+  from { width: 0%; }
+  to { width: var(--bar-width); }
+}
+
+.prob-bar {
+  animation: fillBar 1s ease-out forwards;
+}
+
+/* Glow effect */
+.glow-green {
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.15), 0 0 60px rgba(16, 185, 129, 0.05);
+}
+
+.glow-gold {
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.15), 0 0 60px rgba(245, 158, 11, 0.05);
+}
+
+/* Fade in animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeInUp 0.4s ease-out forwards;
+}
+
+.animate-fade-in-delay-1 { animation-delay: 0.1s; opacity: 0; }
+.animate-fade-in-delay-2 { animation-delay: 0.2s; opacity: 0; }
+.animate-fade-in-delay-3 { animation-delay: 0.3s; opacity: 0; }
+.animate-fade-in-delay-4 { animation-delay: 0.4s; opacity: 0; }
+
+/* Light theme override */
+.light-theme {
+  --color-background: #f8fafc;
+  --color-foreground: #0f172a;
+  --color-card: #ffffff;
+  --color-card-hover: #f1f5f9;
+  --color-border: #e2e8f0;
+  --color-accent: #059669;
+  --color-accent-light: #10b981;
+  --color-gold: #d97706;
+  --color-gold-light: #f59e0b;
+  --color-danger: #dc2626;
+  --color-muted: #94a3b8;
+  --color-surface: #f1f5f9;
+}
+
+.light-theme .glow-green {
+  box-shadow: 0 0 20px rgba(5, 150, 105, 0.1), 0 0 60px rgba(5, 150, 105, 0.03);
+}
+
+.light-theme .glow-gold {
+  box-shadow: 0 0 20px rgba(217, 119, 6, 0.1), 0 0 60px rgba(217, 119, 6, 0.03);
+}
+
+.light-theme select {
+  color: #0f172a;
+}
+
+.light-theme option {
+  background: #ffffff;
+  color: #0f172a;
+}

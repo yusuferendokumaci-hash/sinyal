@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm)",
+      "Read(//c/Users/yusuf/OneDrive/Masaüstü/**)",
+      "Bash(npx create-next-app@latest sinyal --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm)",
+      "Bash(npm install:*)",
+      "Bash(npx next:*)",
+      "mcp__Claude_Preview__preview_start",
+      "mcp__Claude_in_Chrome__tabs_context_mcp",
+      "Bash(curl -s \"https://v3.football.api-sports.io/odds?date=2026-04-15&bookmaker=8\" -H \"x-apisports-key: 0ef5da7c63dfbd91db56c2b347405f9a\")",
+      "Bash(curl -s \"https://v3.football.api-sports.io/odds?fixture=1534571\" -H \"x-apisports-key: 0ef5da7c63dfbd91db56c2b347405f9a\")",
+      "Bash(curl -s \"https://v3.football.api-sports.io/odds?fixture=1534911\" -H \"x-apisports-key: 0ef5da7c63dfbd91db56c2b347405f9a\")",
+      "Bash(python3 -c \" import json, sys d = json.load\\(sys.stdin\\) bets = d['response'][0]['bookmakers'][0]['bets'] for b in bets[:15]: print\\(f'{b[\\\\\"id\\\\\"]:3d} {b[\\\\\"name\\\\\"]:30s} -> {[\\(v[\\\\\"value\\\\\"], v[\\\\\"odd\\\\\"]\\) for v in b[\\\\\"values\\\\\"][:4]]}'\\)\")",
+      "Bash(node -e ':*)",
+      "Bash(curl -s \"https://v3.football.api-sports.io/teams/statistics?team=529&league=2&season=2025\" -H \"x-apisports-key: 0ef5da7c63dfbd91db56c2b347405f9a\")",
+      "Bash(curl -s \"https://v3.football.api-sports.io/teams/statistics?team=529&league=140&season=2025\" -H \"x-apisports-key: 0ef5da7c63dfbd91db56c2b347405f9a\")",
+      "Bash(npx vercel:*)"
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+export function getFlag(country: string): string {
+  const flags: Record<string, string> = {
+    TR: '🇹🇷', ES: '🇪🇸', GB: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', FR: '🇫🇷', DE: '🇩🇪', IT: '🇮🇹',
+    NL: '🇳🇱', PT: '🇵🇹', BE: '🇧🇪', SC: '🏴󠁧󠁢󠁳󠁣󠁴󠁿', RU: '🇷🇺',
+    SA: '🇸🇦', AE: '🇦🇪', US: '🇺🇸', BR: '🇧🇷', AR: '🇦🇷',
+    JP: '🇯🇵', KR: '🇰🇷', CN: '🇨🇳', MX: '🇲🇽', AU: '🇦🇺',
+    GR: '🇬🇷', AT: '🇦🇹', CH: '🇨🇭', PL: '🇵🇱', UA: '🇺🇦',
+    CZ: '🇨🇿', HR: '🇭🇷', RS: '🇷🇸', DK: '🇩🇰', SE: '🇸🇪',
+    NO: '🇳🇴', FI: '🇫🇮', RO: '🇷🇴', CO: '🇨🇴', CL: '🇨🇱',
+    EG: '🇪🇬', MA: '🇲🇦', NG: '🇳🇬', ZA: '🇿🇦', IN: '🇮🇳', QA: '🇶🇦',
+    WC: '🌍', WO: '🌍',
+  };
+  return flags[country] || '🏳️';
+}
