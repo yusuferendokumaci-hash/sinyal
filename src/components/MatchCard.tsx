@@ -7,7 +7,7 @@ import { Locale, t } from '@/lib/i18n';
 import { TeamLogo } from './TeamLogo';
 import { isFavorite, toggleFavorite } from '@/lib/favorites';
 import { getFlag } from '@/lib/flags';
-import { Clock, ChevronRight, TrendingUp, Shield, Heart, Timer, Flame } from 'lucide-react';
+import { ChevronRight, TrendingUp, Heart, Timer, Flame, Zap } from 'lucide-react';
 
 interface MatchCardProps {
   match: Match;
@@ -29,12 +29,12 @@ export function MatchCard({ match, locale, onSelect, delay = 0 }: MatchCardProps
   const mainMarket = prediction?.categories?.[0]?.markets?.[0];
   const isBanko = (prediction?.mainPrediction?.confidence ?? 0) >= 70;
   const mainOdds = prediction?.mainPrediction?.odds;
+  const confidence = prediction?.mainPrediction?.confidence ?? 0;
 
   useEffect(() => {
     setFav(isFavorite(match.id));
   }, [match.id]);
 
-  // Countdown timer
   useEffect(() => {
     function calcCountdown() {
       const [h, m] = match.kickoff.split(':').map(Number);
@@ -42,14 +42,10 @@ export function MatchCard({ match, locale, onSelect, delay = 0 }: MatchCardProps
       const kickoff = new Date(now);
       kickoff.setHours(h, m, 0, 0);
       const diff = kickoff.getTime() - now.getTime();
-      if (diff <= 0) {
-        setCountdown('');
-        return;
-      }
+      if (diff <= 0) { setCountdown(''); return; }
       const hours = Math.floor(diff / 3600000);
       const mins = Math.floor((diff % 3600000) / 60000);
-      if (hours > 0) setCountdown(`${hours}s ${mins}dk`);
-      else setCountdown(`${mins}dk`);
+      setCountdown(hours > 0 ? `${hours}s ${mins}dk` : `${mins}dk`);
     }
     calcCountdown();
     const interval = setInterval(calcCountdown, 60000);
@@ -64,146 +60,165 @@ export function MatchCard({ match, locale, onSelect, delay = 0 }: MatchCardProps
   return (
     <div
       onClick={() => onSelect(match.id)}
-      className={`group cursor-pointer bg-card border border-border rounded-2xl p-4 sm:p-5 hover:border-accent/40 hover:bg-card-hover card-lift relative ${isBanko ? 'banko-pulse' : ''}`}
+      className={`group cursor-pointer relative overflow-hidden rounded-2xl border transition-all duration-300 ${
+        isBanko
+          ? 'bg-gradient-to-br from-card via-card to-gold/5 border-gold/30 hover:border-gold/50'
+          : 'bg-card border-border hover:border-accent/30 hover:bg-card-hover'
+      }`}
       style={{ animation: `slideUp 0.5s ease-out ${delay * 0.1}s both` }}
     >
+      {/* Top accent line */}
+      <div className={`h-0.5 w-full ${isBanko ? 'bg-gradient-to-r from-gold via-gold-light to-gold' : 'bg-gradient-to-r from-transparent via-accent/30 to-transparent'}`} />
+
       {/* Banko badge */}
       {isBanko && (
-        <div className="absolute -top-2 -right-2 z-10">
-          <div className="flex items-center gap-1 bg-gold text-background text-[10px] font-black px-2 py-1 rounded-full shadow-lg">
+        <div className="absolute top-3 right-3 z-10">
+          <div className="flex items-center gap-1 bg-gradient-to-r from-gold to-gold-light text-background text-[9px] font-black px-2.5 py-1 rounded-full shadow-lg shadow-gold/20 uppercase tracking-wider">
             <Flame className="w-3 h-3" />
             BANKO
           </div>
         </div>
       )}
 
-      {/* League + Time + Fav header */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <span className="text-lg">{getFlag(match.leagueCountry)}</span>
-          <span className="text-xs font-medium text-muted">{match.league}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          {countdown && (
-            <div className="flex items-center gap-1 text-[10px] text-gold bg-gold/10 px-2 py-0.5 rounded-full border border-gold/20">
-              <Timer className="w-2.5 h-2.5" />
-              {countdown}
+      <div className="p-4 sm:p-5">
+        {/* League + Time + Fav */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <span className="text-base">{getFlag(match.leagueCountry)}</span>
+            <div>
+              <span className="text-[11px] font-semibold text-foreground/80">{match.league}</span>
             </div>
-          )}
-          <div className="flex items-center gap-1.5 text-xs text-muted">
-            <Clock className="w-3 h-3" />
-            <span>{match.kickoff}</span>
           </div>
-          <button
-            onClick={handleFav}
-            className="p-1 hover:scale-110 transition-transform"
-          >
-            <Heart className={`w-3.5 h-3.5 ${fav ? 'fill-danger text-danger' : 'text-muted/40 hover:text-muted'}`} />
-          </button>
-        </div>
-      </div>
-
-      {/* Teams */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex-1 text-center">
-          <div className="mb-1.5 flex justify-center"><TeamLogo logo={match.homeTeam.logo} name={match.homeTeam.name} size="lg" /></div>
-          <div className="text-sm font-semibold truncate">{match.homeTeam.name}</div>
-          <div className="flex items-center justify-center gap-0.5 mt-1.5">
-            {match.homeTeam.form.map((f, i) => (
-              <span
-                key={i}
-                className={`w-5 h-5 rounded text-[10px] font-bold flex items-center justify-center ${
-                  f === 'W' ? 'bg-accent/20 text-accent' : f === 'D' ? 'bg-gold/20 text-gold' : 'bg-danger/20 text-danger'
-                }`}
-              >
-                {f}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div className="px-4 flex flex-col items-center">
-          <span className="text-xs text-muted mb-1">VS</span>
-          <div className="w-10 h-10 rounded-full border-2 border-border flex items-center justify-center bg-surface">
-            <Shield className="w-4 h-4 text-muted" />
-          </div>
-        </div>
-
-        <div className="flex-1 text-center">
-          <div className="mb-1.5 flex justify-center"><TeamLogo logo={match.awayTeam.logo} name={match.awayTeam.name} size="lg" /></div>
-          <div className="text-sm font-semibold truncate">{match.awayTeam.name}</div>
-          <div className="flex items-center justify-center gap-0.5 mt-1.5">
-            {match.awayTeam.form.map((f, i) => (
-              <span
-                key={i}
-                className={`w-5 h-5 rounded text-[10px] font-bold flex items-center justify-center ${
-                  f === 'W' ? 'bg-accent/20 text-accent' : f === 'D' ? 'bg-gold/20 text-gold' : 'bg-danger/20 text-danger'
-                }`}
-              >
-                {f}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Quick prediction */}
-      <div className="border-t border-border pt-3 mt-1">
-        {prediction ? (
-          <>
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-1.5">
-                <TrendingUp className="w-3.5 h-3.5 text-accent" />
-                <span className="text-xs font-medium text-accent">{t(locale, 'mainPrediction')}</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                {mainOdds && (
-                  <span className="text-[10px] font-bold text-gold bg-gold/10 px-1.5 py-0.5 rounded border border-gold/20">
-                    {mainOdds.toFixed(2)}
-                  </span>
-                )}
-                <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
-                  (prediction.mainPrediction?.confidence ?? 0) >= 70
-                    ? 'bg-gold/15 text-gold'
-                    : (prediction.mainPrediction?.confidence ?? 0) >= 55
-                    ? 'bg-accent/15 text-accent'
-                    : 'bg-muted/15 text-muted'
-                }`}>
-                  %{prediction.mainPrediction?.confidence ?? '-'}
-                </span>
-              </div>
-            </div>
-            {mainMarket?.options && (
-              <div className="grid grid-cols-3 gap-2">
-                {mainMarket.options.map((opt) => (
-                  <div
-                    key={opt.name}
-                    className={`text-center py-2 rounded-lg border ${
-                      opt.recommended ? 'border-accent/40 bg-accent/10' : 'border-border bg-surface'
-                    }`}
-                  >
-                    <div className="text-[10px] text-muted mb-0.5">
-                      {opt.name === '1' ? match.homeTeam.shortName : opt.name === '2' ? match.awayTeam.shortName : 'X'}
-                    </div>
-                    <div className={`text-sm font-bold ${opt.recommended ? 'text-accent' : 'text-foreground'}`}>
-                      {opt.bookmakerOdds ? opt.bookmakerOdds.toFixed(2) : `%${opt.probability}`}
-                    </div>
-                  </div>
-                ))}
+          <div className="flex items-center gap-2">
+            {countdown && (
+              <div className="flex items-center gap-1 text-[10px] font-semibold text-gold bg-gold/8 px-2 py-0.5 rounded-md border border-gold/15">
+                <Timer className="w-2.5 h-2.5" />
+                {countdown}
               </div>
             )}
-          </>
-        ) : (
-          <div className="text-center py-2 text-xs text-muted">
-            {locale === 'tr' ? 'Tahmin hesaplaniyor...' : 'Calculating prediction...'}
+            <span className="text-[11px] text-muted font-mono">{match.kickoff}</span>
+            <button onClick={handleFav} className="p-0.5 hover:scale-125 transition-transform">
+              <Heart className={`w-3.5 h-3.5 transition-colors ${fav ? 'fill-danger text-danger' : 'text-border hover:text-muted'}`} />
+            </button>
           </div>
-        )}
-        <div className="flex items-center justify-center gap-1 mt-3 text-xs text-muted group-hover:text-accent transition-colors">
+        </div>
+
+        {/* Teams */}
+        <div className="flex items-center gap-3 mb-4">
+          {/* Home */}
+          <div className="flex-1 flex items-center gap-3">
+            <div className="flex-shrink-0">
+              <TeamLogo logo={match.homeTeam.logo} name={match.homeTeam.name} size="lg" />
+            </div>
+            <div className="min-w-0">
+              <div className="text-sm font-bold truncate">{match.homeTeam.name}</div>
+              <div className="flex items-center gap-0.5 mt-1">
+                {match.homeTeam.form.map((f, i) => (
+                  <span key={i} className={`w-4 h-4 rounded-sm text-[8px] font-black flex items-center justify-center ${
+                    f === 'W' ? 'bg-accent/20 text-accent' : f === 'D' ? 'bg-gold/20 text-gold' : 'bg-danger/20 text-danger'
+                  }`}>{f}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* VS */}
+          <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-surface border border-border flex items-center justify-center">
+            <span className="text-[10px] font-black text-muted">VS</span>
+          </div>
+
+          {/* Away */}
+          <div className="flex-1 flex items-center gap-3 justify-end text-right">
+            <div className="min-w-0">
+              <div className="text-sm font-bold truncate">{match.awayTeam.name}</div>
+              <div className="flex items-center gap-0.5 mt-1 justify-end">
+                {match.awayTeam.form.map((f, i) => (
+                  <span key={i} className={`w-4 h-4 rounded-sm text-[8px] font-black flex items-center justify-center ${
+                    f === 'W' ? 'bg-accent/20 text-accent' : f === 'D' ? 'bg-gold/20 text-gold' : 'bg-danger/20 text-danger'
+                  }`}>{f}</span>
+                ))}
+              </div>
+            </div>
+            <div className="flex-shrink-0">
+              <TeamLogo logo={match.awayTeam.logo} name={match.awayTeam.name} size="lg" />
+            </div>
+          </div>
+        </div>
+
+        {/* Prediction section */}
+        <div className="bg-surface/50 rounded-xl border border-border/50 p-3">
+          {prediction ? (
+            <>
+              {/* Main prediction bar */}
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-1.5">
+                  <Zap className={`w-3.5 h-3.5 ${isBanko ? 'text-gold' : 'text-accent'}`} />
+                  <span className="text-[11px] font-semibold text-muted">{t(locale, 'mainPrediction')}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  {mainOdds && (
+                    <span className="text-xs font-bold text-gold bg-gold/10 px-2 py-0.5 rounded-md border border-gold/20 font-mono">
+                      {mainOdds.toFixed(2)}
+                    </span>
+                  )}
+                  <div className={`px-2 py-0.5 rounded-md text-xs font-bold ${
+                    confidence >= 70
+                      ? 'bg-gradient-to-r from-gold/20 to-gold/10 text-gold border border-gold/20'
+                      : confidence >= 55
+                      ? 'bg-accent/15 text-accent border border-accent/20'
+                      : 'bg-muted/10 text-muted border border-muted/20'
+                  }`}>
+                    {confidence}%
+                  </div>
+                </div>
+              </div>
+
+              {/* Confidence bar */}
+              <div className="h-1 bg-border/30 rounded-full mb-3 overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all duration-1000 ${
+                    confidence >= 70 ? 'bg-gradient-to-r from-gold to-gold-light' : confidence >= 55 ? 'bg-accent' : 'bg-muted/50'
+                  }`}
+                  style={{ width: `${confidence}%` }}
+                />
+              </div>
+
+              {/* 1X2 odds */}
+              {mainMarket?.options && (
+                <div className="grid grid-cols-3 gap-1.5">
+                  {mainMarket.options.map((opt) => (
+                    <div
+                      key={opt.name}
+                      className={`text-center py-2 rounded-lg transition-all ${
+                        opt.recommended
+                          ? 'bg-accent/10 border border-accent/25'
+                          : 'bg-background/50 border border-border/30'
+                      }`}
+                    >
+                      <div className="text-[9px] text-muted font-medium mb-0.5 uppercase">
+                        {opt.name === '1' ? match.homeTeam.shortName : opt.name === '2' ? match.awayTeam.shortName : 'X'}
+                      </div>
+                      <div className={`text-sm font-bold font-mono ${opt.recommended ? 'text-accent' : 'text-foreground/80'}`}>
+                        {opt.bookmakerOdds ? opt.bookmakerOdds.toFixed(2) : `${opt.probability}%`}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="text-center py-3 text-xs text-muted">
+              {locale === 'tr' ? 'Tahmin hesaplaniyor...' : 'Calculating...'}
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="flex items-center justify-center gap-1 mt-3 text-[11px] text-muted/60 group-hover:text-accent transition-colors">
           <span>{t(locale, 'viewDetails')}</span>
-          <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+          <ChevronRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
         </div>
       </div>
     </div>
   );
 }
-

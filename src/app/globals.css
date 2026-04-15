@@ -1,18 +1,18 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-background: #0a0f1a;
-  --color-foreground: #e8edf5;
-  --color-card: #111827;
-  --color-card-hover: #1a2332;
-  --color-border: #1e293b;
-  --color-accent: #10b981;
-  --color-accent-light: #34d399;
-  --color-gold: #f59e0b;
-  --color-gold-light: #fbbf24;
-  --color-danger: #ef4444;
-  --color-muted: #64748b;
-  --color-surface: #0f172a;
+  --color-background: #080c14;
+  --color-foreground: #f0f4fc;
+  --color-card: #0f1520;
+  --color-card-hover: #151d2c;
+  --color-border: #1a2438;
+  --color-accent: #00d4aa;
+  --color-accent-light: #33ffd2;
+  --color-gold: #ffb800;
+  --color-gold-light: #ffd54f;
+  --color-danger: #ff4757;
+  --color-muted: #5a6b85;
+  --color-surface: #0b1120;
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
@@ -88,18 +88,18 @@ body {
 
 /* Light theme override */
 .light-theme {
-  --color-background: #f8fafc;
-  --color-foreground: #0f172a;
+  --color-background: #f5f7fb;
+  --color-foreground: #0c1222;
   --color-card: #ffffff;
-  --color-card-hover: #f1f5f9;
-  --color-border: #e2e8f0;
-  --color-accent: #059669;
-  --color-accent-light: #10b981;
-  --color-gold: #d97706;
-  --color-gold-light: #f59e0b;
-  --color-danger: #dc2626;
-  --color-muted: #94a3b8;
-  --color-surface: #f1f5f9;
+  --color-card-hover: #f0f3f9;
+  --color-border: #dfe4ee;
+  --color-accent: #00b894;
+  --color-accent-light: #00d4aa;
+  --color-gold: #e6a700;
+  --color-gold-light: #ffb800;
+  --color-danger: #e74c3c;
+  --color-muted: #8899aa;
+  --color-surface: #eef1f7;
 }
 
 .light-theme .glow-green {
