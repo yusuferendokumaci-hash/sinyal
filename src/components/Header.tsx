@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from 'react';
 import { Locale, t } from '@/lib/i18n';
 import { Activity, TrendingUp, ChevronDown } from 'lucide-react';
 import { LanguageSwitcher } from './LanguageSwitcher';
-import { ThemeToggle } from './ThemeToggle';
 
 interface LiveMatch {
   id: number;
@@ -152,7 +151,6 @@ export function Header({ locale, onLocaleChange }: HeaderProps) {
             </div>
           )}
 
-          <ThemeToggle />
           <LanguageSwitcher locale={locale} onChange={onLocaleChange} />
         </div>
       </div>
