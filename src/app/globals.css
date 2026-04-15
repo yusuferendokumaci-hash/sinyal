@@ -88,34 +88,34 @@ body {
 .animate-fade-in-delay-4 { animation-delay: 0.4s; opacity: 0; }
 
 /* Light theme override */
-.light-theme {
-  --color-background: #f5f7fb;
-  --color-foreground: #0c1222;
-  --color-card: #ffffff;
-  --color-card-hover: #f0f3f9;
-  --color-border: #dfe4ee;
-  --color-accent: #00b894;
-  --color-accent-light: #00d4aa;
-  --color-gold: #e6a700;
-  --color-gold-light: #ffb800;
-  --color-danger: #e74c3c;
-  --color-muted: #8899aa;
-  --color-surface: #eef1f7;
+[data-theme="light"] {
+  --color-background: #f5f7fb !important;
+  --color-foreground: #0c1222 !important;
+  --color-card: #ffffff !important;
+  --color-card-hover: #f0f3f9 !important;
+  --color-border: #dfe4ee !important;
+  --color-accent: #00b894 !important;
+  --color-accent-light: #00d4aa !important;
+  --color-gold: #e6a700 !important;
+  --color-gold-light: #ffb800 !important;
+  --color-danger: #e74c3c !important;
+  --color-muted: #8899aa !important;
+  --color-surface: #eef1f7 !important;
 }
 
-.light-theme .glow-green {
+[data-theme="light"] .glow-green {
   box-shadow: 0 0 20px rgba(5, 150, 105, 0.1), 0 0 60px rgba(5, 150, 105, 0.03);
 }
 
-.light-theme .glow-gold {
+[data-theme="light"] .glow-gold {
   box-shadow: 0 0 20px rgba(217, 119, 6, 0.1), 0 0 60px rgba(217, 119, 6, 0.03);
 }
 
-.light-theme select {
+[data-theme="light"] select {
   color: #0f172a;
 }
 
-.light-theme option {
+[data-theme="light"] option {
   background: #ffffff;
   color: #0f172a;
 }
@@ -128,7 +128,7 @@ body {
     radial-gradient(at 50% 80%, rgba(59, 130, 246, 0.05) 0, transparent 50%);
 }
 
-.light-theme .hero-mesh {
+[data-theme="light"] .hero-mesh {
   background-image:
     radial-gradient(at 20% 20%, rgba(5, 150, 105, 0.06) 0, transparent 50%),
     radial-gradient(at 80% 20%, rgba(217, 119, 6, 0.04) 0, transparent 50%),
@@ -176,7 +176,7 @@ body {
   box-shadow: 0 8px 25px rgba(0,0,0,0.15);
 }
 
-.light-theme .card-lift:hover {
+[data-theme="light"] .card-lift:hover {
   box-shadow: 0 8px 25px rgba(0,0,0,0.08);
 }
 
