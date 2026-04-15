@@ -316,16 +316,57 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-border mt-auto">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 text-center">
-          <p className="text-xs text-muted">
-            {t(locale, 'poweredBy')}
-          </p>
-          <p className="text-[10px] text-muted/50 mt-1">
-            {locale === 'tr'
-              ? 'Bu site sadece bilgi amaclidir. Bahis kararlari tamamen size aittir.'
-              : 'This site is for informational purposes only. Betting decisions are entirely your own.'}
-          </p>
+      <footer className="border-t border-border mt-auto bg-surface/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
+            {/* Brand */}
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <img src="/favicon.svg" alt="SINYAL" className="w-6 h-6" />
+                <span className="font-bold text-sm bg-gradient-to-r from-accent-light to-gold-light bg-clip-text text-transparent">SINYAL</span>
+              </div>
+              <p className="text-[11px] text-muted leading-relaxed">
+                {locale === 'tr'
+                  ? 'Yapay zeka destekli futbol tahmin platformu. Dixon-Coles ve Poisson istatistik modelleri ile analiz.'
+                  : 'AI-powered football prediction platform using Dixon-Coles and Poisson statistical models.'}
+              </p>
+            </div>
+
+            {/* Links */}
+            <div>
+              <div className="text-xs font-semibold mb-2">{locale === 'tr' ? 'Baglantilar' : 'Links'}</div>
+              <div className="space-y-1.5">
+                <a href="https://t.me/sinyaltahminleri" target="_blank" rel="noopener" className="flex items-center gap-1.5 text-[11px] text-muted hover:text-accent transition-colors">
+                  📱 Telegram
+                </a>
+                <a href="https://github.com/yusuferendokumaci-hash/sinyal" target="_blank" rel="noopener" className="flex items-center gap-1.5 text-[11px] text-muted hover:text-accent transition-colors">
+                  💻 GitHub
+                </a>
+              </div>
+            </div>
+
+            {/* Stats */}
+            <div>
+              <div className="text-xs font-semibold mb-2">{locale === 'tr' ? 'Ozellikler' : 'Features'}</div>
+              <div className="space-y-1 text-[11px] text-muted">
+                <div>🔬 {locale === 'tr' ? 'Dixon-Coles Modeli' : 'Dixon-Coles Model'}</div>
+                <div>📊 {locale === 'tr' ? '25+ Lig Destegi' : '25+ League Support'}</div>
+                <div>💰 {locale === 'tr' ? 'Gercek Bahisci Oranlari' : 'Real Bookmaker Odds'}</div>
+                <div>🤖 {locale === 'tr' ? 'Telegram Bot' : 'Telegram Bot'}</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-border pt-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <p className="text-[10px] text-muted/60">
+              &copy; 2026 SINYAL. {locale === 'tr' ? 'Tum haklari saklidir.' : 'All rights reserved.'}
+            </p>
+            <p className="text-[10px] text-muted/40">
+              {locale === 'tr'
+                ? 'Bu site sadece bilgi amaclidir. Bahis kararlari tamamen size aittir.'
+                : 'For informational purposes only. Betting decisions are entirely your own.'}
+            </p>
+          </div>
         </div>
       </footer>
 

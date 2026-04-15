@@ -1,0 +1,27 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="256" fill="#0a0f1a"/>
+  <circle cx="256" cy="256" r="240" fill="url(#grad1)" stroke="#10b981" stroke-width="3"/>
+
+  <!-- Signal wave lines -->
+  <path d="M160 320 L200 240 L240 290 L280 180 L320 260 L360 200" stroke="#10b981" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+  <!-- Peak dot -->
+  <circle cx="280" cy="180" r="10" fill="#f59e0b"/>
+
+  <!-- Football icon at bottom -->
+  <circle cx="256" cy="390" r="28" stroke="#10b981" stroke-width="3" fill="none"/>
+  <path d="M256 362 L256 418 M228 390 L284 390" stroke="#10b981" stroke-width="2"/>
+  <path d="M235 370 Q256 385 277 370" stroke="#10b981" stroke-width="2" fill="none"/>
+  <path d="M235 410 Q256 395 277 410" stroke="#10b981" stroke-width="2" fill="none"/>
+
+  <!-- S letter stylized -->
+  <text x="256" y="155" text-anchor="middle" fill="#10b981" font-family="Arial Black, sans-serif" font-weight="900" font-size="48" letter-spacing="8">SINYAL</text>
+
+  <defs>
+    <linearGradient id="grad1" x1="0" y1="0" x2="512" y2="512">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+  </defs>
+</svg>
