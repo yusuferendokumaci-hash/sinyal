@@ -118,3 +118,73 @@ body {
   background: #ffffff;
   color: #0f172a;
 }
+
+/* Gradient mesh background for hero */
+.hero-mesh {
+  background-image:
+    radial-gradient(at 20% 20%, rgba(16, 185, 129, 0.08) 0, transparent 50%),
+    radial-gradient(at 80% 20%, rgba(245, 158, 11, 0.06) 0, transparent 50%),
+    radial-gradient(at 50% 80%, rgba(59, 130, 246, 0.05) 0, transparent 50%);
+}
+
+.light-theme .hero-mesh {
+  background-image:
+    radial-gradient(at 20% 20%, rgba(5, 150, 105, 0.06) 0, transparent 50%),
+    radial-gradient(at 80% 20%, rgba(217, 119, 6, 0.04) 0, transparent 50%),
+    radial-gradient(at 50% 80%, rgba(59, 130, 246, 0.04) 0, transparent 50%);
+}
+
+/* Shimmer loading effect */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, var(--color-border) 25%, var(--color-card) 50%, var(--color-border) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Slide in from bottom */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.5s ease-out forwards;
+}
+
+/* Counter animation */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-count {
+  animation: countUp 0.6s ease-out forwards;
+}
+
+/* Card hover lift effect */
+.card-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.light-theme .card-lift:hover {
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+}
+
+/* Banko pulse animation */
+@keyframes bankoPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+  50% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0); }
+}
+
+.banko-pulse {
+  animation: bankoPulse 2s ease-in-out infinite;
+}

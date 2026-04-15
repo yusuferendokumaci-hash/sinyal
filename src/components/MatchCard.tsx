@@ -59,7 +59,7 @@ export function MatchCard({ match, locale, onSelect, delay = 0 }: MatchCardProps
   return (
     <div
       onClick={() => onSelect(match.id)}
-      className={`animate-fade-in ${delay > 0 ? `animate-fade-in-delay-${delay}` : ''} group cursor-pointer bg-card border border-border rounded-2xl p-4 sm:p-5 hover:border-accent/40 hover:bg-card-hover transition-all duration-300 relative`}
+      className={`animate-slide-up ${delay > 0 ? `animate-fade-in-delay-${delay}` : ''} group cursor-pointer bg-card border border-border rounded-2xl p-4 sm:p-5 hover:border-accent/40 hover:bg-card-hover card-lift relative ${isBanko ? 'banko-pulse' : ''}`}
     >
       {/* Banko badge */}
       {isBanko && (

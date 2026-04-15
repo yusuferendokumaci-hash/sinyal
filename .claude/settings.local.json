@@ -15,7 +15,17 @@
       "Bash(node -e ':*)",
       "Bash(curl -s \"https://v3.football.api-sports.io/teams/statistics?team=529&league=2&season=2025\" -H \"x-apisports-key: 0ef5da7c63dfbd91db56c2b347405f9a\")",
       "Bash(curl -s \"https://v3.football.api-sports.io/teams/statistics?team=529&league=140&season=2025\" -H \"x-apisports-key: 0ef5da7c63dfbd91db56c2b347405f9a\")",
-      "Bash(npx vercel:*)"
+      "Bash(npx vercel:*)",
+      "Bash(curl -s \"https://v3.football.api-sports.io/status\" -H \"x-apisports-key: 0ef5da7c63dfbd91db56c2b347405f9a\")",
+      "Bash(node -e \"const c=[];process.stdin.on\\('data',d=>c.push\\(d\\)\\);process.stdin.on\\('end',\\(\\)=>{const d=JSON.parse\\(Buffer.concat\\(c\\)\\);const r=d.response?.requests;console.log\\('Gunluk limit:', r?.limit_day, '| Kullanilan:', r?.current, '| Kalan:', r?.limit_day - r?.current\\);}\\)\")",
+      "Bash(curl -s \"https://v3.football.api-sports.io/fixtures?date=2026-04-15\" -H \"x-apisports-key: 0ef5da7c63dfbd91db56c2b347405f9a\")",
+      "Bash(curl -s \"https://v3.football.api-sports.io/standings?league=39&season=2025\" -H \"x-apisports-key: 0ef5da7c63dfbd91db56c2b347405f9a\")",
+      "Bash(curl -s \"https://v3.football.api-sports.io/standings?league=39&season=2024\" -H \"x-apisports-key: 0ef5da7c63dfbd91db56c2b347405f9a\")",
+      "Bash(node -e \"const c=[];process.stdin.on\\('data',d=>c.push\\(d\\)\\);process.stdin.on\\('end',\\(\\)=>{const d=JSON.parse\\(Buffer.concat\\(c\\)\\);console.log\\('Kalan:', d.response?.requests?.limit_day - d.response?.requests?.current\\);}\\)\")",
+      "Bash(curl -s \"https://api.telegram.org/bot7957511711:AAHS-drRFxNL8dOZholxs8v44q7wP9fSNww/getMe\")",
+      "Bash(node -e \"const c=[];process.stdin.on\\('data',d=>c.push\\(d\\)\\);process.stdin.on\\('end',\\(\\)=>{const d=JSON.parse\\(Buffer.concat\\(c\\)\\);console.log\\(JSON.stringify\\(d\\)\\);}\\)\")",
+      "Bash(curl -s \"https://api.telegram.org/bot7957511711:AAHS-drRFxNL8dOZholxs8v44q7wP9fSNww/sendMessage\" -d \"chat_id=@sinyaltahminleri\" -d \"text=🟢 SINYAL Bot aktif! Gunun tahminleri yakinda burada.\" -d \"parse_mode=HTML\")",
+      "Bash(node -e \"const c=[];process.stdin.on\\('data',d=>c.push\\(d\\)\\);process.stdin.on\\('end',\\(\\)=>{const d=JSON.parse\\(Buffer.concat\\(c\\)\\);console.log\\(d.ok ? 'BASARILI! Chat ID: ' + d.result.chat.id : 'HATA: ' + JSON.stringify\\(d\\)\\);}\\)\")"
     ]
   }
 }

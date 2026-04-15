@@ -6,6 +6,7 @@ import { MatchCard } from '@/components/MatchCard';
 import { PredictionPanel } from '@/components/PredictionPanel';
 import { DailyPick } from '@/components/DailyPick';
 import { TrackRecord } from '@/components/TrackRecord';
+import { MatchCardSkeleton, DailyPickSkeleton } from '@/components/LoadingSkeleton';
 import { LeagueTable, getAvailableLeagues } from '@/components/LeagueTable';
 import { TopScorers } from '@/components/TopScorers';
 import { CompareMode } from '@/components/CompareMode';
@@ -96,7 +97,7 @@ export default function Home() {
       <Header locale={locale} onLocaleChange={setLocale} />
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden border-b border-border">
+      <section className="relative overflow-hidden border-b border-border hero-mesh">
         <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-gold/5" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
           <div className="text-center max-w-2xl mx-auto">
@@ -144,7 +145,7 @@ export default function Home() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
         {/* Daily Pick + Track Record */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
-          <DailyPick matches={matches} locale={locale} />
+          {loading ? <DailyPickSkeleton /> : <DailyPick matches={matches} locale={locale} />}
           <TrackRecord locale={locale} />
         </div>
 
@@ -264,7 +265,11 @@ export default function Home() {
 
             {/* Match grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-              {filteredMatches.map((match, i) => (
+              {loading ? (
+                <>
+                  {[...Array(6)].map((_, i) => <MatchCardSkeleton key={i} />)}
+                </>
+              ) : filteredMatches.map((match, i) => (
                 <MatchCard
                   key={match.id}
                   match={match}

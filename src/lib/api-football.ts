@@ -87,6 +87,10 @@ export async function fetchTodayFixtures(): Promise<Match[] | null> {
 
   if (filtered.length === 0) return null;
 
+  // Fetch real team stats from standings (one request per league, cached)
+  const leagueIds = [...new Set(filtered.map(f => f.league.id))];
+  const teamStatsMap = await fetchAllTeamStats(leagueIds);
+
   // Fetch real bookmaker odds for fixtures
   const fixtureIds = filtered.slice(0, 50).map(f => f.fixture.id);
   const oddsMap = await fetchOddsBatch(today, fixtureIds);
@@ -94,8 +98,8 @@ export async function fetchTodayFixtures(): Promise<Match[] | null> {
   const matches: Match[] = [];
 
   for (const fixture of filtered.slice(0, 50)) {
-    const homeTeam = mapTeam(fixture.teams.home, true);
-    const awayTeam = mapTeam(fixture.teams.away, false);
+    const homeTeam = mapTeam(fixture.teams.home, true, teamStatsMap);
+    const awayTeam = mapTeam(fixture.teams.away, false, teamStatsMap);
 
     const h2hData = { homeWins: 5, draws: 3, awayWins: 4, totalMatches: 12, avgGoals: 2.5 };
 
@@ -125,7 +129,7 @@ async function fetchOddsBatch(date: string, fixtureIds?: number[]): Promise<Map<
   if (!fixtureIds || fixtureIds.length === 0) return oddsMap;
 
   // Fetch odds per fixture (max 10 to save API quota - free plan 100/day)
-  const idsToFetch = fixtureIds.slice(0, 10);
+  const idsToFetch = fixtureIds.slice(0, 5); // Max 5 to save API quota
 
   const results = await Promise.all(
     idsToFetch.map(id =>
@@ -338,33 +342,125 @@ export async function fetchTopScorers(leagueId: number): Promise<TopScorer[] | n
   }));
 }
 
-// --- Helper functions ---
+// --- Real team stats from standings ---
 
-// Deterministic pseudo-random from team ID so each team gets unique but consistent stats
-function seededRandom(seed: number, index: number): number {
-  const x = Math.sin(seed * 9301 + index * 49297) * 49297;
-  return x - Math.floor(x);
+interface RealTeamStats {
+  form: ('W' | 'D' | 'L')[];
+  goalsFor: number;
+  goalsAgainst: number;
+  played: number;
+  homeWin: number;
+  homePlayed: number;
+  awayWin: number;
+  awayPlayed: number;
 }
 
-function mapTeam(apiTeam: { id: number; name: string; logo: string; winner?: boolean | null }, isHome: boolean): Team {
-  const id = apiTeam.id;
-  const r = (i: number) => seededRandom(id, i);
+// Fetch standings for all leagues to get real team stats (uses 2024 season for free plan)
+async function fetchAllTeamStats(leagueIds: number[]): Promise<Map<number, RealTeamStats>> {
+  const statsMap = new Map<number, RealTeamStats>();
 
-  // Generate form based on team ID
-  const formOptions: ('W' | 'D' | 'L')[] = ['W', 'D', 'L'];
+  // Use cache to avoid repeated requests
+  const { getCached, setCache, CACHE_TTL } = await import('./api-cache');
+
+  // Free plan only supports 2022-2024 season
+  const season = 2024;
+
+  for (const leagueId of leagueIds) {
+    const cacheKey = `team-stats-${leagueId}-${season}`;
+    const cached = getCached<Map<number, RealTeamStats>>(cacheKey);
+    if (cached) {
+      // Merge cached entries
+      cached.forEach((v, k) => statsMap.set(k, v));
+      continue;
+    }
+
+    const data = await apiFetch<ApiResponse<ApiStandingsResponse[]>>('/standings', {
+      league: leagueId.toString(),
+      season: season.toString(),
+    });
+
+    if (!data?.response?.[0]) continue;
+
+    const standings = (data.response[0] as any)?.league?.standings?.[0];
+    if (!standings) continue;
+
+    const leagueStats = new Map<number, RealTeamStats>();
+
+    for (const s of standings) {
+      const formStr = (s.form || '').substring(0, 5);
+      const form: ('W' | 'D' | 'L')[] = formStr.split('').map((c: string) =>
+        c === 'W' ? 'W' : c === 'D' ? 'D' : 'L'
+      ).slice(0, 5) as ('W' | 'D' | 'L')[];
+
+      const homePlayed = (s.home?.win || 0) + (s.home?.draw || 0) + (s.home?.lose || 0);
+      const awayPlayed = (s.away?.win || 0) + (s.away?.draw || 0) + (s.away?.lose || 0);
+
+      const stats: RealTeamStats = {
+        form: form.length >= 3 ? form : ['W', 'D', 'L', 'W', 'D'],
+        goalsFor: s.all?.goals?.for || 30,
+        goalsAgainst: s.all?.goals?.against || 25,
+        played: s.all?.played || 20,
+        homeWin: s.home?.win || 5,
+        homePlayed: homePlayed || 10,
+        awayWin: s.away?.win || 3,
+        awayPlayed: awayPlayed || 10,
+      };
+
+      statsMap.set(s.team.id, stats);
+      leagueStats.set(s.team.id, stats);
+    }
+
+    setCache(cacheKey, leagueStats, CACHE_TTL.TEAM_STATS);
+  }
+
+  return statsMap;
+}
+
+// --- Helper functions ---
+
+function mapTeam(
+  apiTeam: { id: number; name: string; logo: string; winner?: boolean | null },
+  isHome: boolean,
+  teamStatsMap?: Map<number, RealTeamStats>
+): Team {
+  const id = apiTeam.id;
+  const real = teamStatsMap?.get(id);
+
+  if (real) {
+    // Use REAL stats from API
+    const played = Math.max(real.played, 1);
+    return {
+      id: id.toString(),
+      name: apiTeam.name,
+      shortName: apiTeam.name.replace(/^(Al |FC |AC |AS |SS |US |CD )/, '').substring(0, 3).toUpperCase(),
+      logo: apiTeam.logo,
+      form: real.form,
+      goalsScored: real.goalsFor,
+      goalsConceded: real.goalsAgainst,
+      homeWinRate: real.homePlayed > 0 ? real.homeWin / real.homePlayed : 0.5,
+      awayWinRate: real.awayPlayed > 0 ? real.awayWin / real.awayPlayed : 0.4,
+      avgGoalsScored: Math.round((real.goalsFor / played) * 100) / 100,
+      avgGoalsConceded: Math.round((real.goalsAgainst / played) * 100) / 100,
+    };
+  }
+
+  // Fallback: seed-based stats for teams without standings data
+  const r = (i: number) => {
+    const x = Math.sin(id * 9301 + i * 49297) * 49297;
+    return x - Math.floor(x);
+  };
+
   const form: ('W' | 'D' | 'L')[] = [];
   for (let i = 0; i < 5; i++) {
     const val = r(i + 10);
-    // Stronger teams (lower IDs in top leagues) tend to win more
     if (val < 0.45) form.push('W');
     else if (val < 0.7) form.push('D');
     else form.push('L');
   }
 
-  // Stats seeded per team - creates realistic variety
-  const attackBase = 1.0 + r(1) * 1.8;    // 1.0 - 2.8 avg goals scored
-  const defenseBase = 0.6 + r(2) * 1.2;   // 0.6 - 1.8 avg goals conceded
-  const played = 25 + Math.floor(r(3) * 10); // 25-34 matches played
+  const attackBase = 1.0 + r(1) * 1.8;
+  const defenseBase = 0.6 + r(2) * 1.2;
+  const played = 25 + Math.floor(r(3) * 10);
 
   return {
     id: id.toString(),
@@ -374,8 +470,8 @@ function mapTeam(apiTeam: { id: number; name: string; logo: string; winner?: boo
     form,
     goalsScored: Math.round(attackBase * played),
     goalsConceded: Math.round(defenseBase * played),
-    homeWinRate: 0.40 + r(4) * 0.45,      // 40% - 85%
-    awayWinRate: 0.25 + r(5) * 0.45,      // 25% - 70%
+    homeWinRate: 0.40 + r(4) * 0.45,
+    awayWinRate: 0.25 + r(5) * 0.45,
     avgGoalsScored: Math.round(attackBase * 100) / 100,
     avgGoalsConceded: Math.round(defenseBase * 100) / 100,
   };
