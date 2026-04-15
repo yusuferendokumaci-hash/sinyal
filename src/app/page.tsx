@@ -12,7 +12,6 @@ import { TopScorers } from '@/components/TopScorers';
 import { CompareMode } from '@/components/CompareMode';
 import { Accordion } from '@/components/Accordion';
 import { matches as mockMatches, getLeagues as getMockLeagues, getMatchById as getMockMatchById, Match } from '@/lib/mock-data';
-import { generatePredictions } from '@/lib/predictions';
 import { getFlag } from '@/lib/flags';
 import { Locale, t, getMarketName, getOptionName } from '@/lib/i18n';
 import {
@@ -60,15 +59,9 @@ export default function Home() {
     ? matches.filter((m: Match) => m.league === selectedLeague)
     : matches;
 
-  // Sort by highest prediction confidence (best picks first)
+  // Sort by kickoff time
   const filteredMatches = [...baseMatches].sort((a: Match, b: Match) => {
-    try {
-      const predA = generatePredictions(a);
-      const predB = generatePredictions(b);
-      return predB.mainPrediction.confidence - predA.mainPrediction.confidence;
-    } catch {
-      return 0;
-    }
+    return a.kickoff.localeCompare(b.kickoff);
   });
 
   const match = selectedMatch ? matches.find((m: Match) => m.id === selectedMatch) : null;

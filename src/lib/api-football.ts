@@ -88,12 +88,19 @@ export async function fetchTodayFixtures(): Promise<Match[] | null> {
   if (filtered.length === 0) return null;
 
   // Fetch real team stats from standings (one request per league, cached)
-  const leagueIds = [...new Set(filtered.map(f => f.league.id))];
-  const teamStatsMap = await fetchAllTeamStats(leagueIds);
+  // Wrapped in try-catch so API errors don't break match loading
+  let teamStatsMap = new Map<number, RealTeamStats>();
+  try {
+    const leagueIds = [...new Set(filtered.map(f => f.league.id))];
+    teamStatsMap = await fetchAllTeamStats(leagueIds);
+  } catch {}
 
   // Fetch real bookmaker odds for fixtures
-  const fixtureIds = filtered.slice(0, 50).map(f => f.fixture.id);
-  const oddsMap = await fetchOddsBatch(today, fixtureIds);
+  let oddsMap = new Map<number, BookmakerOdds>();
+  try {
+    const fixtureIds = filtered.slice(0, 50).map(f => f.fixture.id);
+    oddsMap = await fetchOddsBatch(today, fixtureIds);
+  } catch {}
 
   const matches: Match[] = [];
 
