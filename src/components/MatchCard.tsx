@@ -104,9 +104,9 @@ export function MatchCard({ match, locale, onSelect, delay = 0 }: MatchCardProps
         </div>
 
         {/* Teams */}
-        <div className="flex items-center gap-3 mb-4">
+        <div className="flex items-center gap-2 mb-4 overflow-hidden">
           {/* Home */}
-          <div className="flex-1 flex items-center gap-3">
+          <div className="flex-1 min-w-0 flex items-center gap-2">
             <div className="flex-shrink-0">
               <TeamLogo logo={match.homeTeam.logo} name={match.homeTeam.name} size="lg" />
             </div>
@@ -128,7 +128,7 @@ export function MatchCard({ match, locale, onSelect, delay = 0 }: MatchCardProps
           </div>
 
           {/* Away */}
-          <div className="flex-1 flex items-center gap-3 justify-end text-right">
+          <div className="flex-1 min-w-0 flex items-center gap-2 justify-end text-right">
             <div className="min-w-0">
               <div className="text-sm font-bold truncate">{match.awayTeam.name}</div>
               <div className="flex items-center gap-0.5 mt-1 justify-end">
