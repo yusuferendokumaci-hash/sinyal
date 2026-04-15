@@ -55,10 +55,15 @@ export async function GET(request: Request) {
     msg += `📅 ${dateStr}\n\n`;
 
     if (picks.length > 0) {
+      // Find full match names for picks
       picks.forEach((pick, i) => {
+        const matchData = matches.find(m => m.id === pick.matchId);
+        const homeName = matchData?.homeTeam.name || pick.matchLabel.split(' vs ')[0];
+        const awayName = matchData?.awayTeam.name || pick.matchLabel.split(' vs ')[1];
         const marketName = getMarketName('tr', pick.marketLabel);
         const optionName = getOptionName('tr', pick.optionName);
-        msg += `${i + 1}️⃣ <b>${pick.matchLabel}</b>\n`;
+
+        msg += `${i + 1}️⃣ <b>${homeName} vs ${awayName}</b>\n`;
         msg += `   📊 ${marketName} → <b>${optionName}</b>\n`;
         msg += `   📈 %${pick.probability} | Oran: <b>${pick.odds}x</b>\n\n`;
       });
@@ -80,19 +85,8 @@ export async function GET(request: Request) {
 
       msg += `${isBanko ? '🔥' : '⚽'} <b>${match.homeTeam.name} vs ${match.awayTeam.name}</b>\n`;
       msg += `   🏆 ${match.league} | ⏰ ${match.kickoff}\n`;
-      msg += `   🎯 ${pred.mainPrediction.label} (%${conf})`;
-      if (pred.mainPrediction.odds) msg += ` | ${pred.mainPrediction.odds}x`;
-      msg += `\n`;
-
-      // Show 1X2 odds if available
-      const m1x2 = pred.categories[0]?.markets[0];
-      if (m1x2) {
-        const opts = m1x2.options;
-        const homeOdd = opts[0]?.bookmakerOdds?.toFixed(2) || `%${opts[0]?.probability}`;
-        const drawOdd = opts[1]?.bookmakerOdds?.toFixed(2) || `%${opts[1]?.probability}`;
-        const awayOdd = opts[2]?.bookmakerOdds?.toFixed(2) || `%${opts[2]?.probability}`;
-        msg += `   1: ${homeOdd} | X: ${drawOdd} | 2: ${awayOdd}\n`;
-      }
+      msg += `   🎯 ${pred.mainPrediction.label}\n`;
+      msg += `   📈 Olasilik: <b>%${conf}</b> | Oran: <b>${pred.mainPrediction.odds}x</b>\n`;
       msg += `\n`;
     }
 
