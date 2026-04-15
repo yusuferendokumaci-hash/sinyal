@@ -17,8 +17,13 @@ interface MatchCardProps {
 }
 
 export function MatchCard({ match, locale, onSelect, delay = 0 }: MatchCardProps) {
-  const prediction = generatePredictions(match);
-  const mainMarket = prediction.categories[0].markets[0]; // 1X2
+  let prediction;
+  try {
+    prediction = generatePredictions(match);
+  } catch {
+    return null; // Skip broken matches
+  }
+  const mainMarket = prediction.categories?.[0]?.markets?.[0];
   const [fav, setFav] = useState(false);
   const [countdown, setCountdown] = useState('');
 
@@ -170,7 +175,7 @@ export function MatchCard({ match, locale, onSelect, delay = 0 }: MatchCardProps
 
         {/* 1X2 probabilities with bookmaker odds */}
         <div className="grid grid-cols-3 gap-2">
-          {mainMarket.options.map((opt) => (
+          {mainMarket?.options?.map((opt) => (
             <div
               key={opt.name}
               className={`text-center py-2 rounded-lg border ${

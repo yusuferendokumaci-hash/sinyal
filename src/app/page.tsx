@@ -62,9 +62,13 @@ export default function Home() {
 
   // Sort by highest prediction confidence (best picks first)
   const filteredMatches = [...baseMatches].sort((a: Match, b: Match) => {
-    const predA = generatePredictions(a);
-    const predB = generatePredictions(b);
-    return predB.mainPrediction.confidence - predA.mainPrediction.confidence;
+    try {
+      const predA = generatePredictions(a);
+      const predB = generatePredictions(b);
+      return predB.mainPrediction.confidence - predA.mainPrediction.confidence;
+    } catch {
+      return 0;
+    }
   });
 
   const match = selectedMatch ? matches.find((m: Match) => m.id === selectedMatch) : null;

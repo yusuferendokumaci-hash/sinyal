@@ -27,7 +27,13 @@
       "Bash(curl -s \"https://api.telegram.org/bot7957511711:AAHS-drRFxNL8dOZholxs8v44q7wP9fSNww/sendMessage\" -d \"chat_id=@sinyaltahminleri\" -d \"text=🟢 SINYAL Bot aktif! Gunun tahminleri yakinda burada.\" -d \"parse_mode=HTML\")",
       "Bash(node -e \"const c=[];process.stdin.on\\('data',d=>c.push\\(d\\)\\);process.stdin.on\\('end',\\(\\)=>{const d=JSON.parse\\(Buffer.concat\\(c\\)\\);console.log\\(d.ok ? 'BASARILI! Chat ID: ' + d.result.chat.id : 'HATA: ' + JSON.stringify\\(d\\)\\);}\\)\")",
       "Bash(curl -s \"https://api.telegram.org/bot7957511711:AAHS-drRFxNL8dOZholxs8v44q7wP9fSNww/setWebhook?url=https://sinyal.vercel.app/api/telegram-webhook\")",
-      "Bash(node -e \"const c=[];process.stdin.on\\('data',d=>c.push\\(d\\)\\);process.stdin.on\\('end',\\(\\)=>{console.log\\(JSON.parse\\(Buffer.concat\\(c\\)\\)\\);}\\)\")"
+      "Bash(node -e \"const c=[];process.stdin.on\\('data',d=>c.push\\(d\\)\\);process.stdin.on\\('end',\\(\\)=>{console.log\\(JSON.parse\\(Buffer.concat\\(c\\)\\)\\);}\\)\")",
+      "Bash(node -e \"const c=[];process.stdin.on\\('data',d=>c.push\\(d\\)\\);process.stdin.on\\('end',\\(\\)=>{const d=JSON.parse\\(Buffer.concat\\(c\\)\\);const r=d.response?.requests;console.log\\('Limit:', r?.limit_day, '| Kullanilan:', r?.current, '| Kalan:', r?.limit_day - r?.current\\);}\\)\")",
+      "Bash(node -e \"const c=[];process.stdin.on\\('data',d=>c.push\\(d\\)\\);process.stdin.on\\('end',\\(\\)=>{console.log\\(Buffer.concat\\(c\\).toString\\(\\).substring\\(0,300\\)\\);}\\)\")",
+      "Bash(curl -s \"https://sinyal-bay.vercel.app/api/matches\")",
+      "Bash(node -e \"const c=[];process.stdin.on\\('data',d=>c.push\\(d\\)\\);process.stdin.on\\('end',\\(\\)=>{const d=JSON.parse\\(Buffer.concat\\(c\\)\\);console.log\\('source:', d.source, 'count:', d.matches?.length || 0\\);}\\)\")",
+      "Bash(curl -s \"https://sinyal-bay.vercel.app\")",
+      "Bash(node -e \"const c=[];process.stdin.on\\('data',d=>c.push\\(d\\)\\);process.stdin.on\\('end',\\(\\)=>{const h=Buffer.concat\\(c\\).toString\\(\\);console.log\\('Has SINYAL:', h.includes\\('SINYAL'\\)\\);console.log\\('Has match cards:', h.includes\\('cursor-pointer'\\)\\);console.log\\('Length:', h.length\\);}\\)\")"
     ]
   }
 }
