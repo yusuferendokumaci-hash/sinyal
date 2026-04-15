@@ -316,13 +316,10 @@ export default function Home() {
 
             {/* Links */}
             <div>
-              <div className="text-xs font-semibold mb-2">{locale === 'tr' ? 'Baglantilar' : 'Links'}</div>
+              <div className="text-xs font-semibold mb-2">{locale === 'tr' ? 'Sosyal Medya' : 'Social Media'}</div>
               <div className="space-y-1.5">
                 <a href="https://t.me/sinyaltahminleri" target="_blank" rel="noopener" className="flex items-center gap-1.5 text-[11px] text-muted hover:text-accent transition-colors">
                   📱 Telegram
-                </a>
-                <a href="https://github.com/yusuferendokumaci-hash/sinyal" target="_blank" rel="noopener" className="flex items-center gap-1.5 text-[11px] text-muted hover:text-accent transition-colors">
-                  💻 GitHub
                 </a>
               </div>
             </div>
