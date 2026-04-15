@@ -96,47 +96,32 @@ export default function Home() {
     <div className="min-h-screen bg-background">
       <Header locale={locale} onLocaleChange={setLocale} />
 
-      {/* Hero Section */}
-      <section className="relative overflow-hidden border-b border-border hero-mesh">
-        <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-gold/5" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
-          <div className="text-center max-w-2xl mx-auto">
-            <div className="flex items-center justify-center gap-2 mb-5 flex-wrap">
-              <div className="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-full px-4 py-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-accent" />
-                <span className="text-xs font-medium text-accent">
-                  {locale === 'tr' ? 'Istatistik Tabanli AI Analiz' : 'Statistics-Based AI Analysis'}
-                </span>
+      {/* Compact Hero Bar */}
+      <section className="border-b border-border bg-surface/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="flex items-center gap-3 flex-wrap justify-center sm:justify-start">
+              <div className="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-full px-3 py-1">
+                <Sparkles className="w-3 h-3 text-accent" />
+                <span className="text-[11px] font-medium text-accent">AI Tahmin Motoru</span>
               </div>
               {dataSource === 'api' && (
-                <div className="inline-flex items-center gap-1.5 bg-gold/10 border border-gold/20 rounded-full px-3 py-1.5">
+                <div className="inline-flex items-center gap-1.5 bg-gold/10 border border-gold/20 rounded-full px-2.5 py-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
-                  <span className="text-[10px] font-medium text-gold">LIVE DATA</span>
+                  <span className="text-[10px] font-medium text-gold">CANLI VERI</span>
                 </div>
               )}
               {loading && (
-                <div className="inline-flex items-center gap-1.5 bg-blue-500/10 border border-blue-500/20 rounded-full px-3 py-1.5">
-                  <span className="text-[10px] font-medium text-blue-400">
-                    {locale === 'tr' ? 'Veriler yukleniyor...' : 'Loading data...'}
-                  </span>
+                <div className="inline-flex items-center gap-1.5 bg-blue-500/10 border border-blue-500/20 rounded-full px-2.5 py-1">
+                  <span className="text-[10px] font-medium text-blue-400">Yukleniyor...</span>
                 </div>
               )}
             </div>
-            <h2 className="text-3xl sm:text-4xl font-black mb-3 bg-gradient-to-r from-foreground via-foreground to-muted bg-clip-text text-transparent">
-              {t(locale, 'siteSlogan')}
-            </h2>
-            <p className="text-sm text-muted max-w-lg mx-auto">
-              {locale === 'tr'
-                ? 'Poisson dagilimi ve istatistiksel analiz ile gunun maclarinin tahminlerini kesfet. Tum bahis secenekleri ve olasilik oranlari.'
-                : 'Discover predictions for today\'s matches using Poisson distribution and statistical analysis. All betting markets with probability rates.'}
-            </p>
-          </div>
-
-          {/* Quick stats */}
-          <div className="flex items-center justify-center gap-6 sm:gap-10 mt-6">
-            <QuickStat icon={<Shield className="w-4 h-4" />} value={matches.length.toString()} label={locale === 'tr' ? 'Mac' : 'Matches'} />
-            <QuickStat icon={<BarChart3 className="w-4 h-4" />} value={leagues.length.toString()} label={locale === 'tr' ? 'Lig' : 'Leagues'} />
-            <QuickStat icon={<Zap className="w-4 h-4" />} value="10" label={locale === 'tr' ? 'Bahis Turu' : 'Markets'} />
+            <div className="flex items-center gap-4 sm:gap-6">
+              <QuickStat icon={<Shield className="w-3.5 h-3.5" />} value={matches.length.toString()} label={locale === 'tr' ? 'Mac' : 'Matches'} />
+              <QuickStat icon={<BarChart3 className="w-3.5 h-3.5" />} value={leagues.length.toString()} label={locale === 'tr' ? 'Lig' : 'Leagues'} />
+              <QuickStat icon={<Zap className="w-3.5 h-3.5" />} value="10" label={locale === 'tr' ? 'Bahis' : 'Bets'} />
+            </div>
           </div>
         </div>
       </section>
