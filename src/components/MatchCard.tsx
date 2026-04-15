@@ -60,7 +60,7 @@ export function MatchCard({ match, locale, onSelect, delay = 0 }: MatchCardProps
   return (
     <div
       onClick={() => onSelect(match.id)}
-      className={`group cursor-pointer relative overflow-hidden rounded-2xl border transition-all duration-300 ${
+      className={`group cursor-pointer relative overflow-hidden rounded-2xl border transition-all duration-300 min-w-0 ${
         isBanko
           ? 'bg-gradient-to-br from-card via-card to-gold/5 border-gold/30 hover:border-gold/50'
           : 'bg-card border-border hover:border-accent/30 hover:bg-card-hover'

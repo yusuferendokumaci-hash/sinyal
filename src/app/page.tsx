@@ -124,7 +124,7 @@ export default function Home() {
       </section>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 overflow-x-hidden">
         {/* Daily Pick + Track Record */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
           {loading ? <DailyPickSkeleton /> : <DailyPick matches={matches} locale={locale} />}
@@ -246,7 +246,7 @@ export default function Home() {
             </div>
 
             {/* Match grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 overflow-hidden">
               {loading ? (
                 <>
                   {[...Array(6)].map((_, i) => <MatchCardSkeleton key={i} />)}
