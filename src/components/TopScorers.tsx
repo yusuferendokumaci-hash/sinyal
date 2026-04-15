@@ -48,6 +48,22 @@ const mockScorers: Record<string, TopScorerRow[]> = {
     { rank: 1, playerName: 'L. de Jong', teamName: 'PSV', teamLogo: '🔴', goals: 18, assists: 5, matches: 26 },
     { rank: 2, playerName: 'B. Brobbey', teamName: 'Ajax', teamLogo: '🔴', goals: 14, assists: 3, matches: 25 },
   ],
+  'Superliga': [
+    { rank: 1, playerName: 'F. Poulsen', teamName: 'FC Midtjylland', teamLogo: '🔴', goals: 14, assists: 4, matches: 24 },
+    { rank: 2, playerName: 'O. Diomande', teamName: 'FC Copenhagen', teamLogo: '🔵', goals: 12, assists: 6, matches: 23 },
+  ],
+  'Eliteserien': [
+    { rank: 1, playerName: 'A. Sørloth', teamName: 'Bodø/Glimt', teamLogo: '🟡', goals: 16, assists: 3, matches: 18 },
+    { rank: 2, playerName: 'E. Braut', teamName: 'Molde', teamLogo: '🔵', goals: 12, assists: 5, matches: 19 },
+  ],
+  'Allsvenskan': [
+    { rank: 1, playerName: 'I. Kiese Thelin', teamName: 'Malmö FF', teamLogo: '🔵', goals: 15, assists: 4, matches: 20 },
+    { rank: 2, playerName: 'N. Stefanelli', teamName: 'AIK', teamLogo: '⬛', goals: 11, assists: 3, matches: 20 },
+  ],
+  'Super League': [
+    { rank: 1, playerName: 'J. Nsame', teamName: 'Young Boys', teamLogo: '🟡', goals: 18, assists: 3, matches: 25 },
+    { rank: 2, playerName: 'T. Ndoye', teamName: 'FC Basel', teamLogo: '🔴', goals: 14, assists: 6, matches: 26 },
+  ],
 };
 
 interface TopScorersProps {

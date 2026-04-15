@@ -46,29 +46,98 @@ export async function fetchTodayFixtures(): Promise<Match[] | null> {
 
   if (!data || !data.response?.length) return null;
 
-  // Filter to supported leagues
+  // Filter to supported leagues - comprehensive list
   const majorLeagueIds = [
-    // Europe - Top Leagues
-    203, // Super Lig (Turkey)
-    140, // La Liga (Spain)
-    39,  // Premier League (England)
-    61,  // Ligue 1 (France)
-    78,  // Bundesliga (Germany)
-    135, // Serie A (Italy)
-    88,  // Eredivisie (Netherlands)
-    94,  // Primeira Liga (Portugal)
-    144, // Jupiler Pro League (Belgium)
-    179, // Scottish Premiership
-    235, // Russian Premier League
-    333, // Saudi Pro League
-    307, // UAE Pro League
-    253, // MLS (USA)
+    // TURKEY
+    203, // Super Lig
+    204, // 1. Lig (TFF 1. Lig)
 
-    // Europe - Second Tiers
-    40,  // Championship (England)
-    141, // Segunda Division (Spain)
-    79,  // 2. Bundesliga (Germany)
-    136, // Serie B (Italy)
+    // ENGLAND
+    39,  // Premier League
+    40,  // Championship
+    41,  // League One
+    42,  // League Two
+
+    // SPAIN
+    140, // La Liga
+    141, // Segunda Division
+
+    // GERMANY
+    78,  // Bundesliga
+    79,  // 2. Bundesliga
+    80,  // 3. Liga
+
+    // ITALY
+    135, // Serie A
+    136, // Serie B
+
+    // FRANCE
+    61,  // Ligue 1
+    62,  // Ligue 2
+
+    // NETHERLANDS
+    88,  // Eredivisie
+    89,  // Eerste Divisie (Hollanda 2. Lig)
+
+    // PORTUGAL
+    94,  // Primeira Liga
+    95,  // Segunda Liga
+
+    // BELGIUM
+    144, // Jupiler Pro League
+
+    // SCOTLAND
+    179, // Scottish Premiership
+
+    // SWITZERLAND
+    207, // Super League (Isvicre)
+
+    // DENMARK
+    119, // Superliga (Danimarka)
+
+    // NORWAY
+    103, // Eliteserien (Norvec)
+
+    // SWEDEN
+    113, // Allsvenskan (Isvec)
+
+    // AUSTRIA
+    218, // Bundesliga (Avusturya)
+
+    // GREECE
+    197, // Super League (Yunanistan)
+
+    // CZECH REPUBLIC
+    345, // Czech Liga
+
+    // POLAND
+    106, // Ekstraklasa (Polonya)
+
+    // CROATIA
+    210, // HNL (Hirvatistan)
+
+    // SERBIA
+    286, // Super Liga (Sirbistan)
+
+    // UKRAINE
+    333, // Premier League (Ukrayna)
+
+    // RUSSIA
+    235, // Premier League (Rusya)
+
+    // MIDDLE EAST
+    307, // UAE Pro League
+    334, // Saudi Pro League (SPL)
+
+    // AMERICAS
+    253, // MLS (USA)
+    71,  // Serie A (Brezilya)
+    128, // Liga Profesional (Arjantin)
+    262, // Liga MX (Meksika)
+
+    // ASIA
+    292, // K-League (Guney Kore)
+    188, // J-League (Japonya)
 
     // UEFA Competitions
     2,   // Champions League
@@ -521,34 +590,45 @@ export interface TopScorer {
 }
 
 export const LEAGUE_IDS: Record<string, number> = {
-  // Top Leagues
-  'Super Lig': 203,
-  'La Liga': 140,
-  'Premier League': 39,
-  'Ligue 1': 61,
-  'Bundesliga': 78,
-  'Serie A': 135,
-  'Eredivisie': 88,
-  'Primeira Liga': 94,
+  // Turkey
+  'Super Lig': 203, 'TFF 1. Lig': 204,
+  // England
+  'Premier League': 39, 'Championship': 40, 'League One': 41, 'League Two': 42,
+  // Spain
+  'La Liga': 140, 'Segunda Division': 141,
+  // Germany
+  'Bundesliga': 78, '2. Bundesliga': 79, '3. Liga': 80,
+  // Italy
+  'Serie A': 135, 'Serie B': 136,
+  // France
+  'Ligue 1': 61, 'Ligue 2': 62,
+  // Netherlands
+  'Eredivisie': 88, 'Eerste Divisie': 89,
+  // Portugal
+  'Primeira Liga': 94, 'Segunda Liga': 95,
+  // Belgium
   'Jupiler Pro League': 144,
+  // Scotland
   'Scottish Premiership': 179,
-  'Saudi Pro League': 333,
-  'UAE Pro League': 307,
-  'MLS': 253,
-  // Second Tiers
-  'Championship': 40,
-  'Segunda Division': 141,
-  '2. Bundesliga': 79,
-  'Serie B': 136,
+  // Scandinavia
+  'Superliga': 119, 'Eliteserien': 103, 'Allsvenskan': 113,
+  // Central Europe
+  'Super League': 207, 'Bundesliga Austria': 218,
+  'Super League Greece': 197, 'Czech Liga': 345,
+  'Ekstraklasa': 106, 'HNL': 210,
+  // Eastern Europe
+  'Super Liga Serbia': 286, 'Premier League Ukraine': 333,
+  'Russian Premier League': 235,
+  // Middle East
+  'Saudi Pro League': 334, 'UAE Pro League': 307,
+  // Americas
+  'MLS': 253, 'Serie A Brazil': 71, 'Liga Profesional': 128, 'Liga MX': 262,
+  // Asia
+  'K-League': 292, 'J-League': 188,
   // UEFA
-  'UEFA Champions League': 2,
-  'UEFA Europa League': 3,
-  'UEFA Europa Conference League': 848,
+  'UEFA Champions League': 2, 'UEFA Europa League': 3, 'UEFA Europa Conference League': 848,
   // International
-  'World Cup': 1,
-  'Euro Championship': 4,
-  'Copa America': 9,
-  'UEFA Nations League': 29,
+  'World Cup': 1, 'Euro Championship': 4, 'Copa America': 9, 'UEFA Nations League': 29,
 };
 
 function countryToCode(country: string): string {

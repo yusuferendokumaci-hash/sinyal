@@ -283,7 +283,7 @@ export default function Home() {
         {/* Tab content: Top Scorers */}
         {activeTab === 'scorers' && (
           <div className="space-y-4">
-            {['Super Lig', 'La Liga', 'Premier League', 'Bundesliga', 'Serie A', 'Ligue 1', 'Saudi Pro League', 'Eredivisie'].map((league) => (
+            {['Super Lig', 'La Liga', 'Premier League', 'Bundesliga', 'Serie A', 'Ligue 1', 'Eredivisie', 'Saudi Pro League', 'Superliga', 'Eliteserien', 'Allsvenskan', 'Super League', 'Ekstraklasa', 'Liga MX'].map((league) => (
               <Accordion
                 key={league}
                 icon={<Users className="w-4 h-4 text-accent" />}

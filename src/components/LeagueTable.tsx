@@ -73,6 +73,54 @@ const mockStandings: Record<string, LeagueStandingRow[]> = {
     { rank: 2, teamName: 'LAFC', teamLogo: '⬛', played: 10, won: 6, drawn: 2, lost: 2, goalsFor: 18, goalsAgainst: 12, goalDiff: 6, points: 20, form: 'WDWLW' },
     { rank: 3, teamName: 'Atlanta United', teamLogo: '🔴', played: 10, won: 5, drawn: 3, lost: 2, goalsFor: 15, goalsAgainst: 10, goalDiff: 5, points: 18, form: 'DWWDL' },
   ],
+  'Eerste Divisie': [
+    { rank: 1, teamName: 'NAC Breda', teamLogo: '🟡', played: 30, won: 20, drawn: 5, lost: 5, goalsFor: 58, goalsAgainst: 28, goalDiff: 30, points: 65, form: 'WWDWL' },
+    { rank: 2, teamName: 'De Graafschap', teamLogo: '🔵', played: 30, won: 18, drawn: 6, lost: 6, goalsFor: 52, goalsAgainst: 30, goalDiff: 22, points: 60, form: 'WDWWW' },
+    { rank: 3, teamName: 'FC Emmen', teamLogo: '🔴', played: 30, won: 17, drawn: 5, lost: 8, goalsFor: 48, goalsAgainst: 32, goalDiff: 16, points: 56, form: 'LWWDW' },
+  ],
+  'TFF 1. Lig': [
+    { rank: 1, teamName: 'Eyupspor', teamLogo: '🟡', played: 28, won: 18, drawn: 6, lost: 4, goalsFor: 48, goalsAgainst: 20, goalDiff: 28, points: 60, form: 'WWDWW' },
+    { rank: 2, teamName: 'Goztepe', teamLogo: '🟡', played: 28, won: 17, drawn: 5, lost: 6, goalsFor: 45, goalsAgainst: 25, goalDiff: 20, points: 56, form: 'WDWLW' },
+    { rank: 3, teamName: 'Sakaryaspor', teamLogo: '🟢', played: 28, won: 16, drawn: 6, lost: 6, goalsFor: 42, goalsAgainst: 24, goalDiff: 18, points: 54, form: 'DWWWL' },
+  ],
+  '2. Bundesliga': [
+    { rank: 1, teamName: 'HSV', teamLogo: '🔵', played: 28, won: 17, drawn: 7, lost: 4, goalsFor: 50, goalsAgainst: 25, goalDiff: 25, points: 58, form: 'WDWWW' },
+    { rank: 2, teamName: 'Köln', teamLogo: '🔴', played: 28, won: 16, drawn: 6, lost: 6, goalsFor: 48, goalsAgainst: 28, goalDiff: 20, points: 54, form: 'WWDLW' },
+    { rank: 3, teamName: 'Hertha BSC', teamLogo: '🔵', played: 28, won: 15, drawn: 5, lost: 8, goalsFor: 44, goalsAgainst: 32, goalDiff: 12, points: 50, form: 'LWWWW' },
+  ],
+  'Serie B': [
+    { rank: 1, teamName: 'Sassuolo', teamLogo: '🟢', played: 30, won: 21, drawn: 5, lost: 4, goalsFor: 56, goalsAgainst: 22, goalDiff: 34, points: 68, form: 'WWWDW' },
+    { rank: 2, teamName: 'Pisa', teamLogo: '🔵', played: 30, won: 18, drawn: 7, lost: 5, goalsFor: 48, goalsAgainst: 25, goalDiff: 23, points: 61, form: 'DWWWL' },
+    { rank: 3, teamName: 'Spezia', teamLogo: '⚪', played: 30, won: 17, drawn: 6, lost: 7, goalsFor: 45, goalsAgainst: 28, goalDiff: 17, points: 57, form: 'WLWDW' },
+  ],
+  'Superliga': [
+    { rank: 1, teamName: 'FC Midtjylland', teamLogo: '🔴', played: 26, won: 17, drawn: 5, lost: 4, goalsFor: 50, goalsAgainst: 22, goalDiff: 28, points: 56, form: 'WWDWW' },
+    { rank: 2, teamName: 'FC Copenhagen', teamLogo: '🔵', played: 26, won: 16, drawn: 4, lost: 6, goalsFor: 48, goalsAgainst: 25, goalDiff: 23, points: 52, form: 'WDWLW' },
+    { rank: 3, teamName: 'Brøndby', teamLogo: '🟡', played: 26, won: 14, drawn: 6, lost: 6, goalsFor: 42, goalsAgainst: 28, goalDiff: 14, points: 48, form: 'DWWWL' },
+  ],
+  'Eliteserien': [
+    { rank: 1, teamName: 'Bodø/Glimt', teamLogo: '🟡', played: 20, won: 14, drawn: 3, lost: 3, goalsFor: 48, goalsAgainst: 18, goalDiff: 30, points: 45, form: 'WWWDW' },
+    { rank: 2, teamName: 'Molde', teamLogo: '🔵', played: 20, won: 12, drawn: 4, lost: 4, goalsFor: 40, goalsAgainst: 22, goalDiff: 18, points: 40, form: 'WDWWL' },
+    { rank: 3, teamName: 'Rosenborg', teamLogo: '⬛', played: 20, won: 11, drawn: 5, lost: 4, goalsFor: 35, goalsAgainst: 20, goalDiff: 15, points: 38, form: 'DWWLW' },
+  ],
+  'Allsvenskan': [
+    { rank: 1, teamName: 'Malmö FF', teamLogo: '🔵', played: 22, won: 15, drawn: 4, lost: 3, goalsFor: 45, goalsAgainst: 18, goalDiff: 27, points: 49, form: 'WWWDW' },
+    { rank: 2, teamName: 'AIK', teamLogo: '⬛', played: 22, won: 13, drawn: 5, lost: 4, goalsFor: 38, goalsAgainst: 20, goalDiff: 18, points: 44, form: 'WDWWL' },
+    { rank: 3, teamName: 'Djurgården', teamLogo: '🔵', played: 22, won: 12, drawn: 4, lost: 6, goalsFor: 36, goalsAgainst: 24, goalDiff: 12, points: 40, form: 'LWWWW' },
+  ],
+  'Super League': [
+    { rank: 1, teamName: 'Young Boys', teamLogo: '🟡', played: 28, won: 19, drawn: 5, lost: 4, goalsFor: 62, goalsAgainst: 28, goalDiff: 34, points: 62, form: 'WDWWW' },
+    { rank: 2, teamName: 'FC Basel', teamLogo: '🔴', played: 28, won: 17, drawn: 6, lost: 5, goalsFor: 55, goalsAgainst: 30, goalDiff: 25, points: 57, form: 'WWDLW' },
+    { rank: 3, teamName: 'FC Lugano', teamLogo: '⬛', played: 28, won: 15, drawn: 5, lost: 8, goalsFor: 45, goalsAgainst: 32, goalDiff: 13, points: 50, form: 'WLWWD' },
+  ],
+  'Ekstraklasa': [
+    { rank: 1, teamName: 'Legia Warszawa', teamLogo: '🟢', played: 28, won: 18, drawn: 6, lost: 4, goalsFor: 52, goalsAgainst: 22, goalDiff: 30, points: 60, form: 'WWDWW' },
+    { rank: 2, teamName: 'Jagiellonia', teamLogo: '🟡', played: 28, won: 17, drawn: 5, lost: 6, goalsFor: 48, goalsAgainst: 26, goalDiff: 22, points: 56, form: 'WDWWL' },
+  ],
+  'Liga MX': [
+    { rank: 1, teamName: 'Club América', teamLogo: '🟡', played: 14, won: 10, drawn: 2, lost: 2, goalsFor: 28, goalsAgainst: 12, goalDiff: 16, points: 32, form: 'WWWDW' },
+    { rank: 2, teamName: 'Tigres UANL', teamLogo: '🟡', played: 14, won: 9, drawn: 3, lost: 2, goalsFor: 25, goalsAgainst: 14, goalDiff: 11, points: 30, form: 'DWWWL' },
+  ],
 };
 
 interface LeagueTableProps {
