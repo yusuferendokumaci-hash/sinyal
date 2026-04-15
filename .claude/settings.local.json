@@ -25,7 +25,9 @@
       "Bash(curl -s \"https://api.telegram.org/bot7957511711:AAHS-drRFxNL8dOZholxs8v44q7wP9fSNww/getMe\")",
       "Bash(node -e \"const c=[];process.stdin.on\\('data',d=>c.push\\(d\\)\\);process.stdin.on\\('end',\\(\\)=>{const d=JSON.parse\\(Buffer.concat\\(c\\)\\);console.log\\(JSON.stringify\\(d\\)\\);}\\)\")",
       "Bash(curl -s \"https://api.telegram.org/bot7957511711:AAHS-drRFxNL8dOZholxs8v44q7wP9fSNww/sendMessage\" -d \"chat_id=@sinyaltahminleri\" -d \"text=🟢 SINYAL Bot aktif! Gunun tahminleri yakinda burada.\" -d \"parse_mode=HTML\")",
-      "Bash(node -e \"const c=[];process.stdin.on\\('data',d=>c.push\\(d\\)\\);process.stdin.on\\('end',\\(\\)=>{const d=JSON.parse\\(Buffer.concat\\(c\\)\\);console.log\\(d.ok ? 'BASARILI! Chat ID: ' + d.result.chat.id : 'HATA: ' + JSON.stringify\\(d\\)\\);}\\)\")"
+      "Bash(node -e \"const c=[];process.stdin.on\\('data',d=>c.push\\(d\\)\\);process.stdin.on\\('end',\\(\\)=>{const d=JSON.parse\\(Buffer.concat\\(c\\)\\);console.log\\(d.ok ? 'BASARILI! Chat ID: ' + d.result.chat.id : 'HATA: ' + JSON.stringify\\(d\\)\\);}\\)\")",
+      "Bash(curl -s \"https://api.telegram.org/bot7957511711:AAHS-drRFxNL8dOZholxs8v44q7wP9fSNww/setWebhook?url=https://sinyal.vercel.app/api/telegram-webhook\")",
+      "Bash(node -e \"const c=[];process.stdin.on\\('data',d=>c.push\\(d\\)\\);process.stdin.on\\('end',\\(\\)=>{console.log\\(JSON.parse\\(Buffer.concat\\(c\\)\\)\\);}\\)\")"
     ]
   }
 }

@@ -15,7 +15,32 @@ export function DailyPick({ matches, locale }: DailyPickProps) {
   const picks = useMemo(() => generateDailyPick(matches), [matches]);
   const coupon = useMemo(() => calculateCoupon(picks), [picks]);
 
-  if (picks.length === 0) return null;
+  if (picks.length === 0) {
+    return (
+      <div className="bg-card border border-border rounded-2xl p-5 animate-fade-in">
+        <div className="flex items-center gap-2 mb-3">
+          <div className="w-9 h-9 rounded-xl bg-gold/15 flex items-center justify-center">
+            <Sparkles className="w-4.5 h-4.5 text-gold" />
+          </div>
+          <div>
+            <h2 className="text-base font-bold">
+              {locale === 'tr' ? 'Gunun Kuponu' : "Today's Pick"}
+            </h2>
+            <p className="text-[10px] text-muted">
+              {locale === 'tr' ? 'AI tarafindan secilmis tahminler' : 'AI selected predictions'}
+            </p>
+          </div>
+        </div>
+        <div className="text-center py-4">
+          <p className="text-sm text-muted">
+            {locale === 'tr'
+              ? 'Bugun icin uygun kupon bulunamadi. Maclar yaklastikca kupon olusturulacak.'
+              : 'No suitable coupon found for today. A coupon will be generated as matches approach.'}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-card border border-gold/30 rounded-2xl p-5 glow-gold animate-fade-in">
