@@ -36,7 +36,12 @@
       "Bash(node -e \"const c=[];process.stdin.on\\('data',d=>c.push\\(d\\)\\);process.stdin.on\\('end',\\(\\)=>{const h=Buffer.concat\\(c\\).toString\\(\\);console.log\\('Has SINYAL:', h.includes\\('SINYAL'\\)\\);console.log\\('Has match cards:', h.includes\\('cursor-pointer'\\)\\);console.log\\('Length:', h.length\\);}\\)\")",
       "Bash(curl -s \"https://sinyal-bay.vercel.app\" -o /dev/null -w \"%{http_code}\")",
       "Bash(node -e \"const c=[];process.stdin.on\\('data',d=>c.push\\(d\\)\\);process.stdin.on\\('end',\\(\\)=>{const h=Buffer.concat\\(c\\).toString\\(\\); const scriptMatch = h.match\\(/src=\\\\\"\\(\\\\/_next\\\\/static\\\\/[^\\\\\"]+\\)\\\\\"/g\\); console.log\\('Scripts:', scriptMatch?.length || 0\\); console.log\\('Has __NEXT_DATA__:', h.includes\\('__NEXT_DATA__'\\)\\); const err = h.match\\(/error/gi\\); console.log\\('Error mentions:', err?.length || 0\\); }\\)\")",
-      "Bash(node -e \"const c=[];process.stdin.on\\('data',d=>c.push\\(d\\)\\);process.stdin.on\\('end',\\(\\)=>{const h=Buffer.concat\\(c\\).toString\\(\\); const lines = h.split\\('\\\\n'\\); lines.forEach\\(\\(l,i\\) => { if\\(l.toLowerCase\\(\\).includes\\('error'\\)\\) console.log\\('Line', i, ':', l.substring\\(0,200\\)\\); }\\); }\\)\")"
+      "Bash(node -e \"const c=[];process.stdin.on\\('data',d=>c.push\\(d\\)\\);process.stdin.on\\('end',\\(\\)=>{const h=Buffer.concat\\(c\\).toString\\(\\); const lines = h.split\\('\\\\n'\\); lines.forEach\\(\\(l,i\\) => { if\\(l.toLowerCase\\(\\).includes\\('error'\\)\\) console.log\\('Line', i, ':', l.substring\\(0,200\\)\\); }\\); }\\)\")",
+      "Bash(node -e \"const c=[];process.stdin.on\\('data',d=>c.push\\(d\\)\\);process.stdin.on\\('end',\\(\\)=>{const d=JSON.parse\\(Buffer.concat\\(c\\)\\);console.log\\('source:', d.source, 'count:', d.matches?.length || 'null'\\);}\\)\")",
+      "Bash(curl -s \"https://sinyal-bay.vercel.app/_next/static/chunks/app/page-*.js\" -o /dev/null -w \"%{http_code}\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://sinyal.vercel.app\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://sinyal-bay.vercel.app\")",
+      "Bash(curl -s \"https://sinyal.vercel.app\")"
     ]
   }
 }
