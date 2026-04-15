@@ -17,18 +17,18 @@ interface MatchCardProps {
 }
 
 export function MatchCard({ match, locale, onSelect, delay = 0 }: MatchCardProps) {
+  const [fav, setFav] = useState(false);
+  const [countdown, setCountdown] = useState('');
+
   let prediction;
   try {
     prediction = generatePredictions(match);
   } catch {
-    return null; // Skip broken matches
+    prediction = null;
   }
-  const mainMarket = prediction.categories?.[0]?.markets?.[0];
-  const [fav, setFav] = useState(false);
-  const [countdown, setCountdown] = useState('');
-
-  const isBanko = prediction.mainPrediction.confidence >= 70;
-  const mainOdds = prediction.mainPrediction.odds;
+  const mainMarket = prediction?.categories?.[0]?.markets?.[0];
+  const isBanko = (prediction?.mainPrediction?.confidence ?? 0) >= 70;
+  const mainOdds = prediction?.mainPrediction?.odds;
 
   useEffect(() => {
     setFav(isFavorite(match.id));
@@ -148,53 +148,55 @@ export function MatchCard({ match, locale, onSelect, delay = 0 }: MatchCardProps
 
       {/* Quick prediction */}
       <div className="border-t border-border pt-3 mt-1">
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-1.5">
-            <TrendingUp className="w-3.5 h-3.5 text-accent" />
-            <span className="text-xs font-medium text-accent">{t(locale, 'mainPrediction')}</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            {mainOdds && (
-              <span className="text-[10px] font-bold text-gold bg-gold/10 px-1.5 py-0.5 rounded border border-gold/20">
-                {mainOdds.toFixed(2)}
-              </span>
-            )}
-            <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
-              prediction.mainPrediction.confidence >= 70
-                ? 'bg-gold/15 text-gold'
-                : prediction.mainPrediction.confidence >= 55
-                ? 'bg-accent/15 text-accent'
-                : prediction.mainPrediction.confidence >= 40
-                ? 'bg-gold/15 text-gold'
-                : 'bg-muted/15 text-muted'
-            }`}>
-              %{prediction.mainPrediction.confidence}
-            </span>
-          </div>
-        </div>
-
-        {/* 1X2 probabilities with bookmaker odds */}
-        <div className="grid grid-cols-3 gap-2">
-          {mainMarket?.options?.map((opt) => (
-            <div
-              key={opt.name}
-              className={`text-center py-2 rounded-lg border ${
-                opt.recommended
-                  ? 'border-accent/40 bg-accent/10'
-                  : 'border-border bg-surface'
-              }`}
-            >
-              <div className="text-[10px] text-muted mb-0.5">
-                {opt.name === '1' ? match.homeTeam.shortName : opt.name === '2' ? match.awayTeam.shortName : 'X'}
+        {prediction ? (
+          <>
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-1.5">
+                <TrendingUp className="w-3.5 h-3.5 text-accent" />
+                <span className="text-xs font-medium text-accent">{t(locale, 'mainPrediction')}</span>
               </div>
-              <div className={`text-sm font-bold ${opt.recommended ? 'text-accent' : 'text-foreground'}`}>
-                {opt.bookmakerOdds ? opt.bookmakerOdds.toFixed(2) : `%${opt.probability}`}
+              <div className="flex items-center gap-1.5">
+                {mainOdds && (
+                  <span className="text-[10px] font-bold text-gold bg-gold/10 px-1.5 py-0.5 rounded border border-gold/20">
+                    {mainOdds.toFixed(2)}
+                  </span>
+                )}
+                <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                  (prediction.mainPrediction?.confidence ?? 0) >= 70
+                    ? 'bg-gold/15 text-gold'
+                    : (prediction.mainPrediction?.confidence ?? 0) >= 55
+                    ? 'bg-accent/15 text-accent'
+                    : 'bg-muted/15 text-muted'
+                }`}>
+                  %{prediction.mainPrediction?.confidence ?? '-'}
+                </span>
               </div>
             </div>
-          ))}
-        </div>
-
-        {/* View details */}
+            {mainMarket?.options && (
+              <div className="grid grid-cols-3 gap-2">
+                {mainMarket.options.map((opt) => (
+                  <div
+                    key={opt.name}
+                    className={`text-center py-2 rounded-lg border ${
+                      opt.recommended ? 'border-accent/40 bg-accent/10' : 'border-border bg-surface'
+                    }`}
+                  >
+                    <div className="text-[10px] text-muted mb-0.5">
+                      {opt.name === '1' ? match.homeTeam.shortName : opt.name === '2' ? match.awayTeam.shortName : 'X'}
+                    </div>
+                    <div className={`text-sm font-bold ${opt.recommended ? 'text-accent' : 'text-foreground'}`}>
+                      {opt.bookmakerOdds ? opt.bookmakerOdds.toFixed(2) : `%${opt.probability}`}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="text-center py-2 text-xs text-muted">
+            {locale === 'tr' ? 'Tahmin hesaplaniyor...' : 'Calculating prediction...'}
+          </div>
+        )}
         <div className="flex items-center justify-center gap-1 mt-3 text-xs text-muted group-hover:text-accent transition-colors">
           <span>{t(locale, 'viewDetails')}</span>
           <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
