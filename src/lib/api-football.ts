@@ -1,4 +1,5 @@
 import { Match, Team, H2H, BookmakerOdds } from './mock-data';
+import { getCached, setCache, CACHE_TTL } from './api-cache';
 
 const API_BASE = 'https://v3.football.api-sports.io';
 const API_KEY = process.env.API_FOOTBALL_KEY || '';
@@ -367,7 +368,7 @@ async function fetchAllTeamStats(leagueIds: number[]): Promise<Map<number, RealT
   const statsMap = new Map<number, RealTeamStats>();
 
   // Use cache to avoid repeated requests
-  const { getCached, setCache, CACHE_TTL } = await import('./api-cache');
+  // Using top-level import for api-cache
 
   // Free plan only supports 2022-2024 season
   const season = 2024;
