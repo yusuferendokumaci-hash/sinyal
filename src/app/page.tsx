@@ -8,6 +8,7 @@ import { DailyPick } from '@/components/DailyPick';
 import { TrackRecord } from '@/components/TrackRecord';
 import { MatchCardSkeleton, DailyPickSkeleton } from '@/components/LoadingSkeleton';
 import { LeagueTable, getAvailableLeagues } from '@/components/LeagueTable';
+import { NotificationBell } from '@/components/NotificationBell';
 import { TopScorers } from '@/components/TopScorers';
 import { CompareMode } from '@/components/CompareMode';
 import { Accordion } from '@/components/Accordion';
@@ -118,6 +119,7 @@ export default function Home() {
               <QuickStat icon={<Shield className="w-3.5 h-3.5" />} value={matches.length.toString()} label={locale === 'tr' ? 'Mac' : 'Matches'} />
               <QuickStat icon={<BarChart3 className="w-3.5 h-3.5" />} value={leagues.length.toString()} label={locale === 'tr' ? 'Lig' : 'Leagues'} />
               <QuickStat icon={<Zap className="w-3.5 h-3.5" />} value="10" label={locale === 'tr' ? 'Bahis' : 'Bets'} />
+              <NotificationBell matches={matches} locale={locale} />
             </div>
           </div>
         </div>
