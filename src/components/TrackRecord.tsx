@@ -14,14 +14,13 @@ export function TrackRecord({ locale }: TrackRecordProps) {
   const [history, setHistory] = useState<ReturnType<typeof getHistory>>([]);
 
   // Verified results from past predictions
+  // Verified results - unique predictions only (15 Nisan 2026)
   const verifiedResults = [
     { id: 'apr15-1', date: '15 Nisan', matchLabel: 'Al-Nassr vs Al-Ettifaq', marketLabel: '3.5 Alt', odds: 2.60, result: 'won' as const },
     { id: 'apr15-2', date: '15 Nisan', matchLabel: 'Arsenal vs Sporting CP', marketLabel: 'KG Yok', odds: 1.80, result: 'won' as const },
     { id: 'apr15-3', date: '15 Nisan', matchLabel: 'Bayern vs Real Madrid', marketLabel: '3.5 Alt', odds: 2.25, result: 'lost' as const },
     { id: 'apr15-4', date: '15 Nisan', matchLabel: 'Metalist vs Veres Rivne', marketLabel: 'MS1', odds: 1.52, result: 'won' as const },
     { id: 'apr15-5', date: '15 Nisan', matchLabel: 'Al-Nassr vs Al-Ettifaq', marketLabel: '2.5 Alt', odds: 4.75, result: 'won' as const },
-    { id: 'apr15-6', date: '15 Nisan', matchLabel: 'Arsenal vs Sporting CP', marketLabel: 'KG Yok', odds: 1.80, result: 'won' as const },
-    { id: 'apr15-7', date: '15 Nisan', matchLabel: 'Bayern vs Real Madrid', marketLabel: '3.5 Alt', odds: 2.25, result: 'lost' as const },
   ];
 
   useEffect(() => {
