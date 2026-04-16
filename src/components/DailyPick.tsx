@@ -103,14 +103,24 @@ export function DailyPick({ matches, locale }: DailyPickProps) {
         </div>
       </div>
 
-      {/* Potential return */}
+      {/* Coupon confidence meter */}
       <div className="mt-3 bg-surface rounded-xl p-3 border border-border">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-[10px] text-muted">{locale === 'tr' ? '100₺ yatirirsan' : 'If you bet 100₺'}</span>
-          <span className="text-sm font-black text-accent">{Math.round(coupon.totalOdds * 100)}₺</span>
+          <span className="text-[10px] text-muted">{locale === 'tr' ? 'Kupon Guven Seviyesi' : 'Coupon Confidence'}</span>
+          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+            coupon.totalProbability >= 30 ? 'bg-accent/15 text-accent' : coupon.totalProbability >= 20 ? 'bg-gold/15 text-gold' : 'bg-danger/15 text-danger'
+          }`}>
+            {coupon.totalProbability >= 30 ? (locale === 'tr' ? 'YUKSEK' : 'HIGH') : coupon.totalProbability >= 20 ? (locale === 'tr' ? 'ORTA' : 'MEDIUM') : (locale === 'tr' ? 'RISKLI' : 'RISKY')}
+          </span>
         </div>
         <div className="h-1.5 bg-border/30 rounded-full overflow-hidden">
-          <div className="h-full rounded-full bg-gradient-to-r from-accent to-gold" style={{ width: `${Math.min(coupon.totalOdds * 20, 100)}%` }} />
+          <div className={`h-full rounded-full ${
+            coupon.totalProbability >= 30 ? 'bg-gradient-to-r from-accent to-accent-light' : coupon.totalProbability >= 20 ? 'bg-gradient-to-r from-gold to-gold-light' : 'bg-danger'
+          }`} style={{ width: `${Math.min(coupon.totalProbability * 2, 100)}%` }} />
+        </div>
+        <div className="flex items-center justify-between mt-1.5 text-[9px] text-muted">
+          <span>{picks.length} {locale === 'tr' ? 'mac' : 'picks'}</span>
+          <span>%{coupon.totalProbability} {locale === 'tr' ? 'olasilik' : 'probability'}</span>
         </div>
       </div>
 
