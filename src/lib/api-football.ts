@@ -21,7 +21,7 @@ async function apiFetch<T>(endpoint: string, params: Record<string, string> = {}
       headers: {
         'x-apisports-key': API_KEY,
       },
-      next: { revalidate: 60 }, // Cache for 1 minute
+      next: { revalidate: 1800 }, // Cache for 30 minutes
     });
 
     if (!res.ok) return null;
@@ -206,7 +206,7 @@ async function fetchOddsBatch(date: string, fixtureIds?: number[]): Promise<Map<
   if (!fixtureIds || fixtureIds.length === 0) return oddsMap;
 
   // Fetch odds per fixture (max 10 to save API quota - free plan 100/day)
-  const idsToFetch = fixtureIds.slice(0, 5); // Max 5 to save API quota
+  const idsToFetch = fixtureIds.slice(0, 3); // Max 3 to save API quota
 
   const results = await Promise.all(
     idsToFetch.map(id =>

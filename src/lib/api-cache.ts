@@ -27,12 +27,12 @@ export function clearCache() {
   cache.clear();
 }
 
-// TTL presets
+// TTL presets - aggressive caching to save API quota (100/day free plan)
 export const CACHE_TTL = {
-  MATCHES: 5 * 60 * 1000,      // 5 min - matches change status
-  ODDS: 10 * 60 * 1000,        // 10 min - odds update periodically
-  STANDINGS: 60 * 60 * 1000,   // 1 hour - standings change rarely during day
-  SCORERS: 60 * 60 * 1000,     // 1 hour
-  LIVE: 30 * 1000,             // 30 sec - live scores
-  TEAM_STATS: 6 * 60 * 60 * 1000, // 6 hours - team stats barely change
+  MATCHES: 30 * 60 * 1000,     // 30 min
+  ODDS: 60 * 60 * 1000,        // 1 hour
+  STANDINGS: 12 * 60 * 60 * 1000, // 12 hours
+  SCORERS: 12 * 60 * 60 * 1000,   // 12 hours
+  LIVE: 2 * 60 * 1000,         // 2 min
+  TEAM_STATS: 24 * 60 * 60 * 1000, // 24 hours
 };

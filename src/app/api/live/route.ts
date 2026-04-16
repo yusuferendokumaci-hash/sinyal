@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getCached, setCache, CACHE_TTL } from '@/lib/api-cache';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 120; // Cache for 2 min
 
 const API_BASE = 'https://v3.football.api-sports.io';
 const API_KEY = process.env.API_FOOTBALL_KEY || '';

@@ -38,7 +38,7 @@ export function Header({ locale, onLocaleChange }: HeaderProps) {
       } catch {}
     }
     fetchLive();
-    const interval = setInterval(fetchLive, 60000); // Refresh every 60s
+    const interval = setInterval(fetchLive, 300000); // Refresh every 5 min (save API quota)
     return () => clearInterval(interval);
   }, []);
 
