@@ -172,6 +172,7 @@ export function TrackRecord({ locale }: TrackRecordProps) {
                   <div className="w-3 h-3 rounded-full border border-muted/40 flex-shrink-0" />
                 )}
                 <span className="text-[10px] text-muted truncate">{h.matchLabel}</span>
+                {h.marketLabel && <span className="text-[9px] text-accent font-medium flex-shrink-0">· {h.marketLabel}</span>}
               </div>
               <span className="text-[10px] font-medium text-muted flex-shrink-0 ml-2">{h.odds.toFixed(2)}x</span>
             </div>
