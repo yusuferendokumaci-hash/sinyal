@@ -13,9 +13,35 @@ export function TrackRecord({ locale }: TrackRecordProps) {
   const [stats, setStats] = useState({ total: 0, won: 0, lost: 0, winRate: 0 });
   const [history, setHistory] = useState<ReturnType<typeof getHistory>>([]);
 
+  // Verified results from past predictions
+  const verifiedResults = [
+    { id: 'apr15-1', date: '15 Nisan', matchLabel: 'Al-Nassr vs Al-Ettifaq', marketLabel: '3.5 Alt', odds: 2.60, result: 'won' as const },
+    { id: 'apr15-2', date: '15 Nisan', matchLabel: 'Arsenal vs Sporting CP', marketLabel: 'KG Yok', odds: 1.80, result: 'won' as const },
+    { id: 'apr15-3', date: '15 Nisan', matchLabel: 'Bayern vs Real Madrid', marketLabel: '3.5 Alt', odds: 2.25, result: 'lost' as const },
+    { id: 'apr15-4', date: '15 Nisan', matchLabel: 'Metalist vs Veres Rivne', marketLabel: 'MS1', odds: 1.52, result: 'won' as const },
+    { id: 'apr15-5', date: '15 Nisan', matchLabel: 'Al-Nassr vs Al-Ettifaq', marketLabel: '2.5 Alt', odds: 4.75, result: 'won' as const },
+    { id: 'apr15-6', date: '15 Nisan', matchLabel: 'Arsenal vs Sporting CP', marketLabel: 'KG Yok', odds: 1.80, result: 'won' as const },
+    { id: 'apr15-7', date: '15 Nisan', matchLabel: 'Bayern vs Real Madrid', marketLabel: '3.5 Alt', odds: 2.25, result: 'lost' as const },
+  ];
+
   useEffect(() => {
-    setStats(getStats());
-    setHistory(getHistory().slice(0, 10));
+    const localStats = getStats();
+    const localHistory = getHistory().slice(0, 10);
+
+    // Merge verified + local
+    const verifiedWon = verifiedResults.filter(r => r.result === 'won').length;
+    const verifiedTotal = verifiedResults.length;
+
+    setStats({
+      total: localStats.total + verifiedTotal,
+      won: localStats.won + verifiedWon,
+      lost: localStats.lost + (verifiedTotal - verifiedWon),
+      winRate: Math.round(((localStats.won + verifiedWon) / Math.max(localStats.total + verifiedTotal, 1)) * 100),
+    });
+    setHistory([...verifiedResults.map(r => ({
+      id: r.id, date: r.date, matchLabel: r.matchLabel, marketLabel: r.marketLabel,
+      optionName: '', probability: 0, odds: r.odds, result: r.result,
+    })), ...localHistory].slice(0, 10));
   }, []);
 
   const handleClear = () => {
