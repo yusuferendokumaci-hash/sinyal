@@ -324,6 +324,9 @@ export default function Home() {
                 <a href="https://instagram.com/_sinyal_1" target="_blank" rel="noopener" className="flex items-center gap-1.5 text-[11px] text-muted hover:text-accent transition-colors">
                   📸 Instagram
                 </a>
+                <a href="https://tiktok.com/@sinyal695" target="_blank" rel="noopener" className="flex items-center gap-1.5 text-[11px] text-muted hover:text-accent transition-colors">
+                  🎵 TikTok
+                </a>
               </div>
             </div>
 
