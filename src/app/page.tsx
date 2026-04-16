@@ -128,7 +128,7 @@ export default function Home() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 overflow-x-hidden">
         {/* Daily Pick + Track Record */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
           {loading ? <DailyPickSkeleton /> : <DailyPick matches={matches} locale={locale} />}
           <TrackRecord locale={locale} />
         </div>
