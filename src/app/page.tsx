@@ -14,9 +14,10 @@ import { CompareMode } from '@/components/CompareMode';
 import { Accordion } from '@/components/Accordion';
 import { matches as mockMatches, getLeagues as getMockLeagues, getMatchById as getMockMatchById, Match } from '@/lib/mock-data';
 import { getFlag } from '@/lib/flags';
+import { getFavorites } from '@/lib/favorites';
 import { Locale, t, getMarketName, getOptionName } from '@/lib/i18n';
 import {
-  Calendar, Filter, Sparkles, BarChart3, Shield, Zap,
+  Calendar, Filter, Sparkles, BarChart3, Shield, Zap, Heart,
   Trophy, ArrowLeftRight, Users, Newspaper, ChevronDown,
 } from 'lucide-react';
 
@@ -24,7 +25,7 @@ export default function Home() {
   const [locale, setLocale] = useState<Locale>('tr');
   const [selectedMatch, setSelectedMatch] = useState<string | null>(null);
   const [selectedLeague, setSelectedLeague] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'matches' | 'standings' | 'scorers'>('matches');
+  const [activeTab, setActiveTab] = useState<'matches' | 'standings' | 'favorites'>('matches');
   const [showCompare, setShowCompare] = useState(false);
   const [showLeagueFilter, setShowLeagueFilter] = useState(false);
   const [liveMatches, setLiveMatches] = useState<Match[]>(mockMatches);
@@ -153,6 +154,15 @@ export default function Home() {
             <Trophy className="w-3.5 h-3.5" />
             {locale === 'tr' ? 'Puan Tablosu' : 'Standings'}
           </button>
+          <button
+            onClick={() => setActiveTab('favorites')}
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-medium transition-all ${
+              activeTab === 'favorites' ? 'bg-danger text-background' : 'bg-card text-muted border border-border hover:border-accent/40'
+            }`}
+          >
+            <Heart className={`w-3.5 h-3.5 ${activeTab === 'favorites' ? 'fill-background' : ''}`} />
+            {locale === 'tr' ? 'Favoriler' : 'Favorites'}
+          </button>
           <div className="flex-1" />
           <button
             onClick={() => setShowCompare(true)}
@@ -273,7 +283,10 @@ export default function Home() {
           </div>
         )}
 
-        {/* Tab content: Top Scorers */}
+        {/* Tab content: Favorites */}
+        {activeTab === 'favorites' && (
+          <FavoritesTab matches={matches} locale={locale} onSelect={setSelectedMatch} />
+        )}
       </main>
 
       {/* Footer */}
@@ -347,6 +360,49 @@ function QuickStat({ icon, value, label }: { icon: React.ReactNode; value: strin
       <div>
         <div className="text-lg font-black">{value}</div>
         <div className="text-[10px] text-muted">{label}</div>
+      </div>
+    </div>
+  );
+}
+
+function FavoritesTab({ matches, locale, onSelect }: { matches: Match[]; locale: Locale; onSelect: (id: string) => void }) {
+  const [favIds, setFavIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    setFavIds(getFavorites());
+  }, []);
+
+  const favMatches = matches.filter(m => favIds.includes(m.id));
+
+  if (favMatches.length === 0) {
+    return (
+      <div className="text-center py-16">
+        <Heart className="w-12 h-12 text-border mx-auto mb-4" />
+        <h3 className="text-lg font-bold mb-2">
+          {locale === 'tr' ? 'Henuz favori macin yok' : 'No favorite matches yet'}
+        </h3>
+        <p className="text-sm text-muted max-w-sm mx-auto">
+          {locale === 'tr'
+            ? 'Mac kartlarindaki kalp ikonuna tiklayarak favorilerine ekle. Favori maclarin burada gorunecek.'
+            : 'Tap the heart icon on match cards to add favorites. Your favorite matches will appear here.'}
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div className="flex items-center gap-3 mb-4">
+        <Heart className="w-5 h-5 text-danger fill-danger" />
+        <h2 className="text-xl font-bold">{locale === 'tr' ? 'Favori Maclarim' : 'My Favorites'}</h2>
+        <span className="text-xs text-muted bg-card border border-border rounded-full px-2.5 py-1">
+          {favMatches.length} {locale === 'tr' ? 'mac' : 'matches'}
+        </span>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 overflow-hidden">
+        {favMatches.map((match, i) => (
+          <MatchCard key={match.id} match={match} locale={locale} onSelect={onSelect} delay={i + 1} />
+        ))}
       </div>
     </div>
   );
