@@ -3,8 +3,8 @@ import { fetchTodayFixtures } from '@/lib/api-football';
 import { getCached, setCache, CACHE_TTL } from '@/lib/api-cache';
 import { Match } from '@/lib/mock-data';
 
-// Vercel edge cache: revalidate every 30 min instead of every request
-export const revalidate = 1800;
+// Vercel edge cache: revalidate every 2 hours
+export const revalidate = 7200;
 
 export async function GET() {
   const cacheKey = 'matches-today';

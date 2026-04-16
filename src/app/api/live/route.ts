@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server';
 import { getCached, setCache, CACHE_TTL } from '@/lib/api-cache';
 
-export const revalidate = 120; // Cache for 2 min
+export const revalidate = 300; // 5 min cache
 
 const API_BASE = 'https://v3.football.api-sports.io';
 const API_KEY = process.env.API_FOOTBALL_KEY || '';
 
 export async function GET() {
+  // Check cache first - 5 min TTL
   const cacheKey = 'live-matches';
   const cached = getCached(cacheKey);
   if (cached) {
@@ -20,6 +21,7 @@ export async function GET() {
   try {
     const res = await fetch(`${API_BASE}/fixtures?live=all`, {
       headers: { 'x-apisports-key': API_KEY },
+      next: { revalidate: 300 }, // Vercel edge cache 5 min
     });
 
     if (!res.ok) return NextResponse.json({ live: [] });
@@ -44,7 +46,7 @@ export async function GET() {
       league: f.league.name,
     }));
 
-    setCache(cacheKey, live, CACHE_TTL.LIVE);
+    setCache(cacheKey, live, 5 * 60 * 1000); // 5 min memory cache
     return NextResponse.json({ live });
   } catch {
     return NextResponse.json({ live: [] });

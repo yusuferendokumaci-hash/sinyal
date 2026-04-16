@@ -21,7 +21,7 @@ async function apiFetch<T>(endpoint: string, params: Record<string, string> = {}
       headers: {
         'x-apisports-key': API_KEY,
       },
-      next: { revalidate: 1800 }, // Cache for 30 minutes
+      next: { revalidate: 7200 }, // Cache for 2 hours
     });
 
     if (!res.ok) return null;
@@ -157,20 +157,13 @@ export async function fetchTodayFixtures(): Promise<Match[] | null> {
 
   if (filtered.length === 0) return null;
 
-  // Fetch real team stats from standings (one request per league, cached)
-  // Wrapped in try-catch so API errors don't break match loading
-  let teamStatsMap = new Map<number, RealTeamStats>();
-  try {
-    const leagueIds = [...new Set(filtered.map(f => f.league.id))];
-    teamStatsMap = await fetchAllTeamStats(leagueIds);
-  } catch {}
-
-  // Fetch real bookmaker odds for fixtures
-  let oddsMap = new Map<number, BookmakerOdds>();
-  try {
-    const fixtureIds = filtered.slice(0, 50).map(f => f.fixture.id);
-    oddsMap = await fetchOddsBatch(today, fixtureIds);
-  } catch {}
+  // DISABLED to save API quota (free plan 100/day)
+  // These will be enabled when Pro plan is active
+  const teamStatsMap = new Map<number, RealTeamStats>();
+  const oddsMap = new Map<number, BookmakerOdds>();
+  // To enable: uncomment below (costs ~15-20 extra requests)
+  // try { const leagueIds = [...new Set(filtered.map(f => f.league.id))]; teamStatsMap = await fetchAllTeamStats(leagueIds); } catch {}
+  // try { const fixtureIds = filtered.slice(0, 50).map(f => f.fixture.id); oddsMap = await fetchOddsBatch(today, fixtureIds); } catch {}
 
   const matches: Match[] = [];
 
