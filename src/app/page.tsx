@@ -153,15 +153,6 @@ export default function Home() {
             <Trophy className="w-3.5 h-3.5" />
             {locale === 'tr' ? 'Puan Tablosu' : 'Standings'}
           </button>
-          <button
-            onClick={() => setActiveTab('scorers')}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-medium transition-all ${
-              activeTab === 'scorers' ? 'bg-accent text-background' : 'bg-card text-muted border border-border hover:border-accent/40'
-            }`}
-          >
-            <Users className="w-3.5 h-3.5" />
-            {locale === 'tr' ? 'Gol Kralligi' : 'Top Scorers'}
-          </button>
           <div className="flex-1" />
           <button
             onClick={() => setShowCompare(true)}
@@ -283,20 +274,6 @@ export default function Home() {
         )}
 
         {/* Tab content: Top Scorers */}
-        {activeTab === 'scorers' && (
-          <div className="space-y-4">
-            {['Super Lig', 'La Liga', 'Premier League', 'Bundesliga', 'Serie A', 'Ligue 1', 'Eredivisie', 'Saudi Pro League', 'Superliga', 'Eliteserien', 'Allsvenskan', 'Super League', 'Ekstraklasa', 'Liga MX'].map((league) => (
-              <Accordion
-                key={league}
-                icon={<Users className="w-4 h-4 text-accent" />}
-                title={league}
-                defaultOpen={league === 'Super Lig'}
-              >
-                <TopScorers league={league} locale={locale} />
-              </Accordion>
-            ))}
-          </div>
-        )}
       </main>
 
       {/* Footer */}
