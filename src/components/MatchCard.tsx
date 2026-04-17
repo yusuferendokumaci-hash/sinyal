@@ -6,7 +6,7 @@ import { generatePredictions } from '@/lib/predictions';
 import { Locale, t } from '@/lib/i18n';
 import { TeamLogo } from './TeamLogo';
 import { isFavorite, toggleFavorite } from '@/lib/favorites';
-import { getFlag } from '@/lib/flags';
+import { getFlag, getFlagImageUrl } from '@/lib/flags';
 import { ChevronRight, TrendingUp, Heart, Timer, Flame, Zap } from 'lucide-react';
 
 interface MatchCardProps {
@@ -84,7 +84,11 @@ export function MatchCard({ match, locale, onSelect, delay = 0 }: MatchCardProps
         {/* League + Time + Fav */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <span className="text-base">{getFlag(match.leagueCountry)}</span>
+            {getFlagImageUrl(match.leagueCountry) ? (
+              <img src={getFlagImageUrl(match.leagueCountry)} alt="" className="w-5 h-3.5 object-cover rounded-sm flex-shrink-0" />
+            ) : (
+              <span className="text-base">{getFlag(match.leagueCountry)}</span>
+            )}
             <div>
               <span className="text-[11px] font-semibold text-foreground/80">{match.league}</span>
             </div>
