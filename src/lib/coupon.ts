@@ -96,3 +96,179 @@ export function generateDailyPick(matches: Match[]): CouponSelection[] {
 
   return selected;
 }
+
+// --- BANKO KUPON: En yuksek olasilikli maclar (en guvenli)
+export function generateBankoPick(matches: Match[]): CouponSelection[] {
+  const MAX_PICKS = 3;
+  const MIN_PROB = 70; // Sadece %70+ olasilikli
+  const MIN_ODDS = 1.15; // Cok dusuk oranlari da atla
+
+  interface Candidate {
+    match: Match;
+    market: MarketPrediction;
+    option: MarketPrediction['options'][0];
+    odds: number;
+  }
+
+  const candidates: Candidate[] = [];
+
+  for (const match of matches) {
+    let pred;
+    try { pred = generatePredictions(match); } catch { continue; }
+
+    for (const category of pred.categories) {
+      for (const market of category.markets) {
+        for (const opt of market.options) {
+          const odds = opt.bookmakerOdds || probToOdds(opt.probability);
+          if (odds >= MIN_ODDS && opt.probability >= MIN_PROB) {
+            candidates.push({ match, market, option: opt, odds });
+          }
+        }
+      }
+    }
+  }
+
+  // En yuksek olasilik once
+  candidates.sort((a, b) => b.option.probability - a.option.probability);
+
+  const selected: CouponSelection[] = [];
+  const usedMatchIds = new Set<string>();
+
+  for (const pick of candidates) {
+    if (selected.length >= MAX_PICKS) break;
+    if (usedMatchIds.has(pick.match.id)) continue;
+    usedMatchIds.add(pick.match.id);
+
+    selected.push({
+      matchId: pick.match.id,
+      matchLabel: `${pick.match.homeTeam.name} vs ${pick.match.awayTeam.name}`,
+      marketLabel: pick.market.label,
+      optionName: pick.option.name,
+      probability: pick.option.probability,
+      odds: pick.odds,
+    });
+  }
+
+  return selected;
+}
+
+// --- YUKSEK ORAN KUPON: Min 100x toplam oran
+export function generateHighOddsPick(matches: Match[]): CouponSelection[] {
+  const MIN_TOTAL_ODDS = 100;
+  const MAX_PICKS = 6;
+  const MIN_PICK_ODDS = 2.5; // Her pick min 2.5 oran (riskli ama deger)
+  const MIN_PROB = 25; // Cok dusuk prob almayalim, elense de tutma ihtimali olsun
+
+  interface Candidate {
+    match: Match;
+    market: MarketPrediction;
+    option: MarketPrediction['options'][0];
+    odds: number;
+    prob: number;
+  }
+
+  const candidates: Candidate[] = [];
+
+  for (const match of matches) {
+    let pred;
+    try { pred = generatePredictions(match); } catch { continue; }
+
+    for (const category of pred.categories) {
+      for (const market of category.markets) {
+        for (const opt of market.options) {
+          const odds = opt.bookmakerOdds || probToOdds(opt.probability);
+          if (odds >= MIN_PICK_ODDS && opt.probability >= MIN_PROB) {
+            candidates.push({ match, market, option: opt, odds, prob: opt.probability });
+          }
+        }
+      }
+    }
+  }
+
+  // Value score ile sirala (prob * odds)
+  candidates.sort((a, b) => (b.prob * b.odds) - (a.prob * a.odds));
+
+  const selected: CouponSelection[] = [];
+  const usedMatchIds = new Set<string>();
+  let totalOdds = 1;
+
+  for (const pick of candidates) {
+    if (selected.length >= MAX_PICKS) break;
+    if (usedMatchIds.has(pick.match.id)) continue;
+    usedMatchIds.add(pick.match.id);
+
+    selected.push({
+      matchId: pick.match.id,
+      matchLabel: `${pick.match.homeTeam.name} vs ${pick.match.awayTeam.name}`,
+      marketLabel: pick.market.label,
+      optionName: pick.option.name,
+      probability: pick.option.probability,
+      odds: pick.odds,
+    });
+
+    totalOdds *= pick.odds;
+    // 100x asinca dur (min 2 pick)
+    if (totalOdds >= MIN_TOTAL_ODDS && selected.length >= 2) break;
+  }
+
+  return selected;
+}
+
+// --- SKOR DENEMESI: En olasilikli skor tahminleri, max 2 mac
+export function generateScorePick(matches: Match[]): CouponSelection[] {
+  const MAX_PICKS = 2;
+
+  interface ScoreCandidate {
+    match: Match;
+    home: number;
+    away: number;
+    probability: number;
+    odds: number;
+  }
+
+  const candidates: ScoreCandidate[] = [];
+
+  for (const match of matches) {
+    let pred;
+    try { pred = generatePredictions(match); } catch { continue; }
+
+    // Take the TOP score prediction for each match
+    const topScore = pred.scorePredictions[0];
+    if (!topScore) continue;
+
+    // Score prediction olasiligi dusuk, bu yuzden cok olasilikli olanlari almali
+    if (topScore.probability < 8) continue;
+
+    const odds = probToOdds(topScore.probability);
+    candidates.push({
+      match,
+      home: topScore.home,
+      away: topScore.away,
+      probability: topScore.probability,
+      odds,
+    });
+  }
+
+  // En yuksek olasilikli skorlar once
+  candidates.sort((a, b) => b.probability - a.probability);
+
+  const selected: CouponSelection[] = [];
+  const usedMatchIds = new Set<string>();
+
+  for (const pick of candidates) {
+    if (selected.length >= MAX_PICKS) break;
+    if (usedMatchIds.has(pick.match.id)) continue;
+    usedMatchIds.add(pick.match.id);
+
+    selected.push({
+      matchId: pick.match.id,
+      matchLabel: `${pick.match.homeTeam.name} vs ${pick.match.awayTeam.name}`,
+      marketLabel: 'score',
+      optionName: `${pick.home}-${pick.away}`,
+      probability: pick.probability,
+      odds: pick.odds,
+    });
+  }
+
+  return selected;
+}
