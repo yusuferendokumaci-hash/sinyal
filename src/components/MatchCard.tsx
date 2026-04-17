@@ -70,9 +70,9 @@ export function MatchCard({ match, locale, onSelect, delay = 0 }: MatchCardProps
       {/* Top accent line */}
       <div className={`h-0.5 w-full ${isBanko ? 'bg-gradient-to-r from-gold via-gold-light to-gold' : 'bg-gradient-to-r from-transparent via-accent/30 to-transparent'}`} />
 
-      {/* Banko badge - small, top-right corner above time */}
+      {/* Banko badge - small, top-right corner */}
       {isBanko && (
-        <div className="absolute -top-2 right-3 z-10">
+        <div className="absolute top-1.5 right-3 z-10">
           <div className="flex items-center gap-0.5 bg-gradient-to-r from-gold to-gold-light text-background text-[8px] font-black px-2 py-0.5 rounded-full shadow-lg shadow-gold/30 uppercase tracking-wider">
             <Flame className="w-2.5 h-2.5" />
             BANKO
@@ -80,7 +80,7 @@ export function MatchCard({ match, locale, onSelect, delay = 0 }: MatchCardProps
         </div>
       )}
 
-      <div className="p-4 sm:p-5">
+      <div className={`p-4 sm:p-5 ${isBanko ? 'pt-7' : ''}`}>
         {/* League + Time + Fav */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
