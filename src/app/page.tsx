@@ -13,7 +13,7 @@ import { TopScorers } from '@/components/TopScorers';
 import { CompareMode } from '@/components/CompareMode';
 import { Accordion } from '@/components/Accordion';
 import { matches as mockMatches, getLeagues as getMockLeagues, getMatchById as getMockMatchById, Match } from '@/lib/mock-data';
-import { getFlag } from '@/lib/flags';
+import { getFlag, getFlagImageUrl } from '@/lib/flags';
 import { getFavorites } from '@/lib/favorites';
 import { Locale, t, getMarketName, getOptionName } from '@/lib/i18n';
 import {
@@ -195,7 +195,9 @@ export default function Home() {
                   <Filter className="w-3.5 h-3.5 text-muted" />
                   {selectedLeague ? (
                     <>
-                      <span className="text-sm">{getFlag(leagueCountryMap.get(selectedLeague) || '')}</span>
+                      {getFlagImageUrl(leagueCountryMap.get(selectedLeague) || '') ? (
+                        <img src={getFlagImageUrl(leagueCountryMap.get(selectedLeague) || '')} alt="" className="w-5 h-3.5 object-cover rounded-sm" />
+                      ) : <span className="text-sm">🌍</span>}
                       <span className="font-medium">{selectedLeague}</span>
                     </>
                   ) : (
@@ -227,6 +229,7 @@ export default function Home() {
                         {leagues.map((league) => {
                           const country = leagueCountryMap.get(league) || '';
                           const count = matches.filter((m: Match) => m.league === league).length;
+                          const flagUrl = getFlagImageUrl(country);
                           return (
                             <button
                               key={league}
@@ -235,7 +238,9 @@ export default function Home() {
                                 selectedLeague === league ? 'bg-accent/10 text-accent' : 'text-foreground'
                               }`}
                             >
-                              <span className="text-sm">{getFlag(country)}</span>
+                              {flagUrl ? (
+                                <img src={flagUrl} alt="" className="w-5 h-3.5 object-cover rounded-sm flex-shrink-0" />
+                              ) : <span className="text-sm flex-shrink-0">🌍</span>}
                               <span className="font-medium">{league}</span>
                               <span className="ml-auto text-[10px] text-muted bg-surface px-1.5 py-0.5 rounded">{count}</span>
                             </button>
