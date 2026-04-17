@@ -3,7 +3,7 @@
 import { Match } from '@/lib/mock-data';
 import { generateDailyPick, calculateCoupon, CouponSelection } from '@/lib/coupon';
 import { Locale, t, getMarketName, getOptionName } from '@/lib/i18n';
-import { Sparkles, TrendingUp, Zap } from 'lucide-react';
+import { Sparkles, TrendingUp, Zap, Clock } from 'lucide-react';
 import { useMemo } from 'react';
 
 interface DailyPickProps {
@@ -67,14 +67,24 @@ export function DailyPick({ matches, locale }: DailyPickProps) {
       </div>
 
       <div className="space-y-2">
-        {picks.map((pick, i) => (
+        {picks.map((pick, i) => {
+          const matchData = matches.find(m => m.id === pick.matchId);
+          return (
           <div key={i} className="flex items-center justify-between bg-surface rounded-xl px-3 py-2.5 border border-border">
             <div className="flex items-center gap-3 min-w-0">
               <div className="w-6 h-6 rounded-lg bg-gold/10 flex items-center justify-center flex-shrink-0">
                 <span className="text-xs font-bold text-gold">{i + 1}</span>
               </div>
               <div className="min-w-0">
-                <div className="text-xs font-semibold truncate">{pick.matchLabel}</div>
+                <div className="flex items-center gap-1.5">
+                  <div className="text-xs font-semibold truncate">{pick.matchLabel}</div>
+                  {matchData?.kickoff && (
+                    <span className="flex items-center gap-0.5 text-[9px] text-gold bg-gold/10 px-1.5 py-0.5 rounded flex-shrink-0 border border-gold/15">
+                      <Clock className="w-2 h-2" />
+                      {matchData.kickoff}
+                    </span>
+                  )}
+                </div>
                 <div className="text-[10px] text-muted">
                   {getMarketName(locale, pick.marketLabel)} &middot; <span className="text-accent font-medium">{getOptionName(locale, pick.optionName)}</span>
                 </div>
@@ -85,7 +95,8 @@ export function DailyPick({ matches, locale }: DailyPickProps) {
               <span className="text-[10px] text-muted bg-card px-1.5 py-0.5 rounded border border-border">{pick.odds}x</span>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="mt-3 pt-3 border-t border-border flex items-center justify-between">
