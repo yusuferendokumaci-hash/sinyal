@@ -216,16 +216,18 @@ export function generatePredictions(match: Match): MatchPrediction {
     ],
   };
 
-  // First Half (use ~42% of xG for first half, standard split)
+  // First Half (use ~44% of xG for first half, standard split)
   const htHomeXG = homeXG * 0.44;
   const htAwayXG = awayXG * 0.44;
   let htHome = 0, htDraw = 0, htAway = 0;
+  let htBttsYes = 0; // First Half BTTS
   for (let i = 0; i <= 4; i++) {
     for (let j = 0; j <= 4; j++) {
       const p = poissonProb(htHomeXG, i) * poissonProb(htAwayXG, j);
       if (i > j) htHome += p;
       else if (i === j) htDraw += p;
       else htAway += p;
+      if (i > 0 && j > 0) htBttsYes += p;
     }
   }
   const htT = htHome + htDraw + htAway;
@@ -235,6 +237,47 @@ export function generatePredictions(match: Match): MatchPrediction {
       { name: '1', probability: r1(htHome / htT), recommended: htHome / htT > htDraw / htT && htHome / htT > htAway / htT, bookmakerOdds: bo?.firstHalf?.home },
       { name: 'X', probability: r1(htDraw / htT), recommended: htDraw / htT > htHome / htT && htDraw / htT > htAway / htT, bookmakerOdds: bo?.firstHalf?.draw },
       { name: '2', probability: r1(htAway / htT), recommended: htAway / htT > htHome / htT && htAway / htT > htDraw / htT, bookmakerOdds: bo?.firstHalf?.away },
+    ],
+  };
+
+  // First Half BTTS (Ilk Yari Karsilikli Gol)
+  const firstHalfBtts: MarketPrediction = {
+    label: 'firstHalfBtts',
+    options: [
+      { name: 'yes', probability: r1(htBttsYes), recommended: htBttsYes > 0.3 },
+      { name: 'no', probability: r1(1 - htBttsYes), recommended: htBttsYes <= 0.3 },
+    ],
+  };
+
+  // HT/FT (Ilk Yari / Mac Sonu kombinasyonu) - Dixon-Coles independence approximation
+  // P(HT_result AND FT_result) - using conditional probabilities
+  const htHomeP = htHome / htT;
+  const htDrawP = htDraw / htT;
+  const htAwayP = htAway / htT;
+  // For FT result, we already have homeWinP, drawP, awayWinP
+  // Not independent but independence approximation for display
+  const htft11 = htHomeP * homeWinP;
+  const htft1X = htHomeP * drawP;
+  const htft12 = htHomeP * awayWinP;
+  const htftX1 = htDrawP * homeWinP;
+  const htftXX = htDrawP * drawP;
+  const htftX2 = htDrawP * awayWinP;
+  const htft21 = htAwayP * homeWinP; // 2/1 comeback
+  const htft2X = htAwayP * drawP;
+  const htft22 = htAwayP * awayWinP;
+
+  const htft: MarketPrediction = {
+    label: 'htft',
+    options: [
+      { name: '1/1', probability: r1(htft11) },
+      { name: '1/X', probability: r1(htft1X) },
+      { name: '1/2', probability: r1(htft12) }, // Comeback: home leads, away wins
+      { name: 'X/1', probability: r1(htftX1) },
+      { name: 'X/X', probability: r1(htftXX) },
+      { name: 'X/2', probability: r1(htftX2) },
+      { name: '2/1', probability: r1(htft21) }, // Comeback: away leads, home wins
+      { name: '2/X', probability: r1(htft2X) },
+      { name: '2/2', probability: r1(htft22) },
     ],
   };
 
@@ -466,8 +509,8 @@ export function generatePredictions(match: Match): MatchPrediction {
 
   // --- Categories ---
   const categories: MarketCategory[] = [
-    { id: 'matchResult', icon: 'trophy', markets: [matchResult, doubleChance, firstHalf] },
-    { id: 'goals', icon: 'goal', markets: [overUnder15, overUnder25, overUnder35, btts] },
+    { id: 'matchResult', icon: 'trophy', markets: [matchResult, doubleChance, firstHalf, htft] },
+    { id: 'goals', icon: 'goal', markets: [overUnder15, overUnder25, overUnder35, btts, firstHalfBtts] },
     { id: 'corners', icon: 'corner', markets: [corners85, corners95, corners105] },
     { id: 'cards', icon: 'card', markets: [cards25, cards35, cards45] },
   ];

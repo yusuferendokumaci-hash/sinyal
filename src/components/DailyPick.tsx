@@ -114,7 +114,6 @@ export function DailyPick({ matches, locale }: DailyPickProps) {
           <div className="space-y-2">
             {currentPicks.map((pick, i) => {
               const matchData = matches.find(m => m.id === pick.matchId);
-              const isScore = pick.marketLabel === 'score';
               return (
                 <div key={i} className="flex items-center justify-between bg-surface rounded-xl px-3 py-2.5 border border-border">
                   <div className="flex items-center gap-3 min-w-0">
@@ -142,8 +141,10 @@ export function DailyPick({ matches, locale }: DailyPickProps) {
                         )}
                       </div>
                       <div className="text-[10px] text-muted">
-                        {isScore ? (
+                        {pick.marketLabel === 'score' ? (
                           <><Trophy className="w-2.5 h-2.5 inline mr-0.5" /> {locale === 'tr' ? 'Skor' : 'Score'}: <span className="text-accent font-bold">{pick.optionName}</span></>
+                        ) : pick.marketLabel === 'htft' ? (
+                          <>{locale === 'tr' ? 'IY/MS' : 'HT/FT'}: <span className="text-accent font-bold">{pick.optionName}</span></>
                         ) : (
                           <>{getMarketName(locale, pick.marketLabel)} &middot; <span className="text-accent font-medium">{getOptionName(locale, pick.optionName)}</span></>
                         )}
