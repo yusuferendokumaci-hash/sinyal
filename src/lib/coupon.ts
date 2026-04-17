@@ -20,8 +20,9 @@ export interface Coupon {
 export function probToOdds(probability: number): number {
   if (probability <= 0) return 1;
   const raw = 100 / probability;
-  // Apply small margin (bookmaker edge ~5%)
-  return Math.round(raw * 0.95 * 100) / 100;
+  // Iddaa/Nesine margin (~12-15%) - Turkish legal betting odds approximation
+  const iddaaOdd = raw * 0.85;
+  return Math.max(1.05, Math.round(iddaaOdd * 100) / 100);
 }
 
 // Calculate coupon totals

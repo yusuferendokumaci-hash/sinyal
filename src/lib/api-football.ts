@@ -225,6 +225,16 @@ async function fetchOddsBatch(date: string, fixtureIds?: number[]): Promise<Map<
   return oddsMap;
 }
 
+// Convert international bookmaker odds to Iddaa/Nesine approximation
+// Iddaa typically has 12-15% higher margin than international bookies
+// Formula: iddaa_odd ≈ bet365_odd × 0.88
+function toIddaaOdds(odd: number): number {
+  if (odd <= 1.01) return odd;
+  const converted = odd * 0.88;
+  // Min 1.05 to avoid unrealistic values
+  return Math.max(1.05, Math.round(converted * 100) / 100);
+}
+
 function processOddsItem(item: ApiOddsFixture, oddsMap: Map<number, BookmakerOdds>) {
     const fixtureId = item.fixture.id;
     const odds: BookmakerOdds = {};
@@ -238,9 +248,9 @@ function processOddsItem(item: ApiOddsFixture, oddsMap: Map<number, BookmakerOdd
           const away = bet.values.find((v: ApiOddsValue) => v.value === 'Away')?.odd;
           if (home && draw && away) {
             odds.matchResult = {
-              home: parseFloat(home),
-              draw: parseFloat(draw),
-              away: parseFloat(away),
+              home: toIddaaOdds(parseFloat(home)),
+              draw: toIddaaOdds(parseFloat(draw)),
+              away: toIddaaOdds(parseFloat(away)),
             };
           }
         }
@@ -250,17 +260,17 @@ function processOddsItem(item: ApiOddsFixture, oddsMap: Map<number, BookmakerOdd
           const o15 = bet.values.find((v: ApiOddsValue) => v.value === 'Over 1.5')?.odd;
           const u15 = bet.values.find((v: ApiOddsValue) => v.value === 'Under 1.5')?.odd;
           if (o15 && u15) {
-            odds.overUnder15 = { over: parseFloat(o15), under: parseFloat(u15) };
+            odds.overUnder15 = { over: toIddaaOdds(parseFloat(o15)), under: toIddaaOdds(parseFloat(u15)) };
           }
           const o25 = bet.values.find((v: ApiOddsValue) => v.value === 'Over 2.5')?.odd;
           const u25 = bet.values.find((v: ApiOddsValue) => v.value === 'Under 2.5')?.odd;
           if (o25 && u25) {
-            odds.overUnder25 = { over: parseFloat(o25), under: parseFloat(u25) };
+            odds.overUnder25 = { over: toIddaaOdds(parseFloat(o25)), under: toIddaaOdds(parseFloat(u25)) };
           }
           const o35 = bet.values.find((v: ApiOddsValue) => v.value === 'Over 3.5')?.odd;
           const u35 = bet.values.find((v: ApiOddsValue) => v.value === 'Under 3.5')?.odd;
           if (o35 && u35) {
-            odds.overUnder35 = { over: parseFloat(o35), under: parseFloat(u35) };
+            odds.overUnder35 = { over: toIddaaOdds(parseFloat(o35)), under: toIddaaOdds(parseFloat(u35)) };
           }
         }
 
@@ -270,8 +280,8 @@ function processOddsItem(item: ApiOddsFixture, oddsMap: Map<number, BookmakerOdd
           const no = bet.values.find((v: ApiOddsValue) => v.value === 'No')?.odd;
           if (yes && no) {
             odds.btts = {
-              yes: parseFloat(yes),
-              no: parseFloat(no),
+              yes: toIddaaOdds(parseFloat(yes)),
+              no: toIddaaOdds(parseFloat(no)),
             };
           }
         }
@@ -283,9 +293,9 @@ function processOddsItem(item: ApiOddsFixture, oddsMap: Map<number, BookmakerOdd
           const da = bet.values.find((v: ApiOddsValue) => v.value === 'Draw/Away')?.odd;
           if (hd && ha && da) {
             odds.doubleChance = {
-              homeOrDraw: parseFloat(hd),
-              homeOrAway: parseFloat(ha),
-              drawOrAway: parseFloat(da),
+              homeOrDraw: toIddaaOdds(parseFloat(hd)),
+              homeOrAway: toIddaaOdds(parseFloat(ha)),
+              drawOrAway: toIddaaOdds(parseFloat(da)),
             };
           }
         }
@@ -296,7 +306,7 @@ function processOddsItem(item: ApiOddsFixture, oddsMap: Map<number, BookmakerOdd
           const d = bet.values.find((v: ApiOddsValue) => v.value === 'Draw')?.odd;
           const a = bet.values.find((v: ApiOddsValue) => v.value === 'Away')?.odd;
           if (h && d && a) {
-            odds.firstHalf = { home: parseFloat(h), draw: parseFloat(d), away: parseFloat(a) };
+            odds.firstHalf = { home: toIddaaOdds(parseFloat(h)), draw: toIddaaOdds(parseFloat(d)), away: toIddaaOdds(parseFloat(a)) };
           }
         }
       }

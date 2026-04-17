@@ -334,7 +334,7 @@ export default function Home() {
             </p>
             <p className="text-[10px] text-muted/40">
               {locale === 'tr'
-                ? 'Bu site sadece bilgi amaclidir. Bahis kararlari tamamen size aittir.'
+                ? 'Oranlar Iddaa/Nesine referansli hesaplanmistir. Bu site sadece bilgi amaclidir. Bahis kararlari tamamen size aittir.'
                 : 'For informational purposes only. Betting decisions are entirely your own.'}
             </p>
           </div>
