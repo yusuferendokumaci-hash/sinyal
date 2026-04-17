@@ -182,6 +182,7 @@ export async function fetchTodayFixtures(): Promise<Match[] | null> {
       kickoff: new Date(fixture.fixture.date).toLocaleTimeString('tr-TR', {
         hour: '2-digit',
         minute: '2-digit',
+        timeZone: 'Europe/Istanbul',
       }),
       h2h: h2hData,
       status: mapStatus(fixture.fixture.status.short),
