@@ -97,11 +97,12 @@ export function generateDailyPick(matches: Match[]): CouponSelection[] {
   return selected;
 }
 
-// --- BANKO KUPON: En yuksek olasilikli maclar (en guvenli)
+// --- BANKO KUPON: En yuksek olasilikli maclar (en guvenli), min 2.0 toplam oran
 export function generateBankoPick(matches: Match[]): CouponSelection[] {
-  const MAX_PICKS = 3;
-  const MIN_PROB = 70; // Sadece %70+ olasilikli
-  const MIN_ODDS = 1.15; // Cok dusuk oranlari da atla
+  const MAX_PICKS = 5;
+  const MIN_TOTAL_ODDS = 2.0; // Min 2x toplam oran
+  const MIN_PROB = 65; // %65+ olasilikli
+  const MIN_ODDS = 1.20; // Her pick min 1.20
 
   interface Candidate {
     match: Match;
@@ -133,12 +134,16 @@ export function generateBankoPick(matches: Match[]): CouponSelection[] {
 
   const selected: CouponSelection[] = [];
   const usedMatchIds = new Set<string>();
+  let totalOdds = 1;
 
   for (const pick of candidates) {
     if (selected.length >= MAX_PICKS) break;
     if (usedMatchIds.has(pick.match.id)) continue;
-    usedMatchIds.add(pick.match.id);
 
+    // En az 2 pick ve min 2.0 toplam oran olunca dur
+    if (selected.length >= 2 && totalOdds >= MIN_TOTAL_ODDS) break;
+
+    usedMatchIds.add(pick.match.id);
     selected.push({
       matchId: pick.match.id,
       matchLabel: `${pick.match.homeTeam.name} vs ${pick.match.awayTeam.name}`,
@@ -147,6 +152,7 @@ export function generateBankoPick(matches: Match[]): CouponSelection[] {
       probability: pick.option.probability,
       odds: pick.odds,
     });
+    totalOdds *= pick.odds;
   }
 
   return selected;
