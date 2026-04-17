@@ -97,12 +97,13 @@ export function generateDailyPick(matches: Match[]): CouponSelection[] {
   return selected;
 }
 
-// --- BANKO KUPON: En yuksek olasilikli maclar (en guvenli), min 2.0 toplam oran
+// --- BANKO KUPON: Max 2 mac, yuksek olasilik + iyi oran
+// Eger tek macta 2.0+ oran bulunursa tek mac, yoksa 2 mac birlestir
 export function generateBankoPick(matches: Match[]): CouponSelection[] {
-  const MAX_PICKS = 5;
-  const MIN_TOTAL_ODDS = 2.0; // Min 2x toplam oran
+  const MAX_PICKS = 2;
+  const MIN_TOTAL_ODDS = 2.0;
   const MIN_PROB = 65; // %65+ olasilikli
-  const MIN_ODDS = 1.20; // Her pick min 1.20
+  const MIN_ODDS = 1.30; // Her pick min 1.30
 
   interface Candidate {
     match: Match;
@@ -129,21 +130,51 @@ export function generateBankoPick(matches: Match[]): CouponSelection[] {
     }
   }
 
-  // En yuksek olasilik once
-  candidates.sort((a, b) => b.option.probability - a.option.probability);
+  if (candidates.length === 0) return [];
+
+  // Her mactan en iyi pick'i al (ayni maca 2 tahmin yapma)
+  const bestPerMatch = new Map<string, typeof candidates[0]>();
+  for (const c of candidates) {
+    const existing = bestPerMatch.get(c.match.id);
+    // Value = prob * odds, en yuksek value'lu pick
+    const cValue = c.option.probability * c.odds;
+    const eValue = existing ? existing.option.probability * existing.odds : -1;
+    if (cValue > eValue) bestPerMatch.set(c.match.id, c);
+  }
+  const uniqueCandidates = Array.from(bestPerMatch.values());
+
+  // Once: tek macta 2.0+ oranli + yuksek olasilikli var mi?
+  // Boylece tekli bahis olarak verilebilir
+  const singleHighOdds = uniqueCandidates
+    .filter(c => c.odds >= MIN_TOTAL_ODDS && c.option.probability >= MIN_PROB)
+    .sort((a, b) => b.option.probability - a.option.probability);
+
+  if (singleHighOdds.length > 0) {
+    const pick = singleHighOdds[0];
+    return [{
+      matchId: pick.match.id,
+      matchLabel: `${pick.match.homeTeam.name} vs ${pick.match.awayTeam.name}`,
+      marketLabel: pick.market.label,
+      optionName: pick.option.name,
+      probability: pick.option.probability,
+      odds: pick.odds,
+    }];
+  }
+
+  // Aksi halde 2 mac birlestir (toplam 2.0+ olacak sekilde)
+  // En yuksek value'lu 2 farkli macin pick'ini al
+  uniqueCandidates.sort((a, b) => {
+    // Prob * odds (value) ile sirala
+    const aVal = a.option.probability * a.odds;
+    const bVal = b.option.probability * b.odds;
+    return bVal - aVal;
+  });
 
   const selected: CouponSelection[] = [];
-  const usedMatchIds = new Set<string>();
   let totalOdds = 1;
 
-  for (const pick of candidates) {
+  for (const pick of uniqueCandidates) {
     if (selected.length >= MAX_PICKS) break;
-    if (usedMatchIds.has(pick.match.id)) continue;
-
-    // En az 2 pick ve min 2.0 toplam oran olunca dur
-    if (selected.length >= 2 && totalOdds >= MIN_TOTAL_ODDS) break;
-
-    usedMatchIds.add(pick.match.id);
     selected.push({
       matchId: pick.match.id,
       matchLabel: `${pick.match.homeTeam.name} vs ${pick.match.awayTeam.name}`,
@@ -153,6 +184,7 @@ export function generateBankoPick(matches: Match[]): CouponSelection[] {
       odds: pick.odds,
     });
     totalOdds *= pick.odds;
+    if (totalOdds >= MIN_TOTAL_ODDS && selected.length >= 2) break;
   }
 
   return selected;
