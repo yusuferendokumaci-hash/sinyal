@@ -270,16 +270,29 @@ export default function Home() {
         {/* Tab content: Standings */}
         {activeTab === 'standings' && (
           <div className="space-y-4">
-            {getAvailableLeagues().map((league) => (
-              <Accordion
-                key={league}
-                icon={<Trophy className="w-4 h-4 text-gold" />}
-                title={league}
-                defaultOpen={league === 'Super Lig'}
-              >
-                <LeagueTable league={league} locale={locale} />
-              </Accordion>
-            ))}
+            {getAvailableLeagues().map((league) => {
+              const leagueFlags: Record<string, string> = {
+                'Super Lig': 'TR', 'TFF 1. Lig': 'TR',
+                'Premier League': 'GB', 'Championship': 'GB',
+                'La Liga': 'ES', 'Bundesliga': 'DE', '2. Bundesliga': 'DE',
+                'Serie A': 'IT', 'Serie B': 'IT',
+                'Ligue 1': 'FR', 'Eredivisie': 'NL', 'Eerste Divisie': 'NL',
+                'Primeira Liga': 'PT', 'Saudi Pro League': 'SA',
+                'MLS': 'US', 'Superliga': 'DK', 'Eliteserien': 'NO',
+                'Allsvenskan': 'SE', 'Super League': 'CH',
+                'Ekstraklasa': 'PL', 'Liga MX': 'MX',
+              };
+              return (
+                <Accordion
+                  key={league}
+                  icon={<span className="text-base">{getFlag(leagueFlags[league] || '')}</span>}
+                  title={league}
+                  defaultOpen={league === 'Super Lig'}
+                >
+                  <LeagueTable league={league} locale={locale} />
+                </Accordion>
+              );
+            })}
           </div>
         )}
 

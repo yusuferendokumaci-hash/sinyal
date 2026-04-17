@@ -86,7 +86,7 @@ export function generateDailyPick(matches: Match[]): CouponSelection[] {
 
     selected.push({
       matchId: pick.match.id,
-      matchLabel: `${pick.match.homeTeam.shortName} vs ${pick.match.awayTeam.shortName}`,
+      matchLabel: `${pick.match.homeTeam.name} vs ${pick.match.awayTeam.name}`,
       marketLabel: pick.market.label,
       optionName: pick.option.name,
       probability: pick.option.probability,
