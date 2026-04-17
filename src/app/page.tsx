@@ -10,7 +10,6 @@ import { MatchCardSkeleton, DailyPickSkeleton } from '@/components/LoadingSkelet
 import { LeagueTable, getAvailableLeagues } from '@/components/LeagueTable';
 import { NotificationBell } from '@/components/NotificationBell';
 import { TopScorers } from '@/components/TopScorers';
-import { CompareMode } from '@/components/CompareMode';
 import { Accordion } from '@/components/Accordion';
 import { matches as mockMatches, getLeagues as getMockLeagues, getMatchById as getMockMatchById, Match } from '@/lib/mock-data';
 import { getFlag, getFlagImageUrl } from '@/lib/flags';
@@ -18,7 +17,7 @@ import { getFavorites } from '@/lib/favorites';
 import { Locale, t, getMarketName, getOptionName } from '@/lib/i18n';
 import {
   Calendar, Filter, Sparkles, BarChart3, Shield, Zap, Heart,
-  Trophy, ArrowLeftRight, Users, Newspaper, ChevronDown,
+  Trophy, Users, Newspaper, ChevronDown,
 } from 'lucide-react';
 
 export default function Home() {
@@ -26,7 +25,6 @@ export default function Home() {
   const [selectedMatch, setSelectedMatch] = useState<string | null>(null);
   const [selectedLeague, setSelectedLeague] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'matches' | 'standings' | 'favorites'>('matches');
-  const [showCompare, setShowCompare] = useState(false);
   const [showLeagueFilter, setShowLeagueFilter] = useState(false);
   const [liveMatches, setLiveMatches] = useState<Match[]>(mockMatches);
   const [dataSource, setDataSource] = useState<'mock' | 'api'>('mock');
@@ -82,14 +80,6 @@ export default function Home() {
     );
   }
 
-  if (showCompare) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Header locale={locale} onLocaleChange={setLocale} />
-        <CompareMode matches={matches} locale={locale} onClose={() => setShowCompare(false)} />
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -104,12 +94,6 @@ export default function Home() {
                 <Sparkles className="w-3 h-3 text-accent" />
                 <span className="text-[11px] font-medium text-accent">AI Tahmin Motoru</span>
               </div>
-              {dataSource === 'api' && (
-                <div className="inline-flex items-center gap-1.5 bg-gold/10 border border-gold/20 rounded-full px-2.5 py-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
-                  <span className="text-[10px] font-medium text-gold">CANLI VERI</span>
-                </div>
-              )}
               {loading && (
                 <div className="inline-flex items-center gap-1.5 bg-blue-500/10 border border-blue-500/20 rounded-full px-2.5 py-1">
                   <span className="text-[10px] font-medium text-blue-400">Yukleniyor...</span>
@@ -162,14 +146,6 @@ export default function Home() {
           >
             <Heart className={`w-3.5 h-3.5 ${activeTab === 'favorites' ? 'fill-background' : ''}`} />
             {locale === 'tr' ? 'Favoriler' : 'Favorites'}
-          </button>
-          <div className="flex-1" />
-          <button
-            onClick={() => setShowCompare(true)}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-medium bg-card text-muted border border-border hover:border-accent/40 transition-all"
-          >
-            <ArrowLeftRight className="w-3.5 h-3.5" />
-            {locale === 'tr' ? 'Karsilastir' : 'Compare'}
           </button>
         </div>
 
