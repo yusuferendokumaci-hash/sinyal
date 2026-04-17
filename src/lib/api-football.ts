@@ -157,13 +157,19 @@ export async function fetchTodayFixtures(): Promise<Match[] | null> {
 
   if (filtered.length === 0) return null;
 
-  // DISABLED to save API quota (free plan 100/day)
-  // These will be enabled when Pro plan is active
-  const teamStatsMap = new Map<number, RealTeamStats>();
-  const oddsMap = new Map<number, BookmakerOdds>();
-  // To enable: uncomment below (costs ~15-20 extra requests)
-  // try { const leagueIds = [...new Set(filtered.map(f => f.league.id))]; teamStatsMap = await fetchAllTeamStats(leagueIds); } catch {}
-  // try { const fixtureIds = filtered.slice(0, 50).map(f => f.fixture.id); oddsMap = await fetchOddsBatch(today, fixtureIds); } catch {}
+  // Real team stats (24h cache) - ~15-20 requests but cached all day
+  let teamStatsMap = new Map<number, RealTeamStats>();
+  try {
+    const leagueIds = [...new Set(filtered.map(f => f.league.id))];
+    teamStatsMap = await fetchAllTeamStats(leagueIds);
+  } catch {}
+
+  // Real bookmaker odds (1h cache) - max 3 fixtures to save quota
+  let oddsMap = new Map<number, BookmakerOdds>();
+  try {
+    const fixtureIds = filtered.slice(0, 50).map(f => f.fixture.id);
+    oddsMap = await fetchOddsBatch(today, fixtureIds);
+  } catch {}
 
   const matches: Match[] = [];
 
@@ -200,7 +206,7 @@ async function fetchOddsBatch(date: string, fixtureIds?: number[]): Promise<Map<
   if (!fixtureIds || fixtureIds.length === 0) return oddsMap;
 
   // Fetch odds per fixture (max 10 to save API quota - free plan 100/day)
-  const idsToFetch = fixtureIds.slice(0, 3); // Max 3 to save API quota
+  const idsToFetch = fixtureIds.slice(0, 8); // Max 8 fixtures odds (1h cache)
 
   const results = await Promise.all(
     idsToFetch.map(id =>
