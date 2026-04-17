@@ -42,6 +42,11 @@ const categoryConfig: Record<string, { icon: (open?: boolean) => React.ReactNode
     titleKey: 'catGoals',
     badgeColor: 'bg-accent/15 text-accent',
   },
+  firstHalf: {
+    icon: () => <Zap className="w-4 h-4 text-purple-400" />,
+    titleKey: 'catFirstHalf',
+    badgeColor: 'bg-purple-400/15 text-purple-400',
+  },
   corners: {
     icon: () => <Flag className="w-4 h-4 text-blue-400" />,
     titleKey: 'catCorners',
@@ -224,6 +229,36 @@ export function PredictionPanel({ match, locale, onBack }: PredictionPanelProps)
                 </div>
               </div>
             )}
+
+            {/* First Half score predictions */}
+            {category.id === 'firstHalf' && prediction.halfTimeScorePredictions && prediction.halfTimeScorePredictions.length > 0 && (
+              <div className="mb-5">
+                <h3 className="text-sm font-semibold text-muted mb-3 flex items-center gap-2">
+                  <Award className="w-3.5 h-3.5" />
+                  {locale === 'tr' ? 'Ilk Yari Skor Tahminleri' : 'First Half Score Predictions'}
+                </h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {prediction.halfTimeScorePredictions.slice(0, 6).map((sp, i) => (
+                    <div
+                      key={i}
+                      className={`text-center py-2.5 px-3 rounded-lg border transition-all ${
+                        i === 0 ? 'border-purple-400/40 bg-purple-400/5' : 'border-border bg-surface'
+                      }`}
+                    >
+                      <div className="text-xl font-black mb-0.5">
+                        <span className={i === 0 ? 'text-purple-400' : 'text-foreground'}>
+                          {sp.home} - {sp.away}
+                        </span>
+                      </div>
+                      <div className={`text-[10px] font-medium ${i === 0 ? 'text-purple-400' : 'text-muted'}`}>
+                        %{sp.probability}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div className="space-y-5">
               {category.markets.map((market) => (
                 <div key={market.label}>

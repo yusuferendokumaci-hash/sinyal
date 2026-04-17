@@ -39,6 +39,7 @@ export interface MatchPrediction {
   mainPrediction: MainPick;
   categories: MarketCategory[];
   scorePredictions: ScorePrediction[];
+  halfTimeScorePredictions?: ScorePrediction[];
   analysis_tr: string;
   analysis_en: string;
 }
@@ -220,16 +221,27 @@ export function generatePredictions(match: Match): MatchPrediction {
   const htHomeXG = homeXG * 0.44;
   const htAwayXG = awayXG * 0.44;
   let htHome = 0, htDraw = 0, htAway = 0;
-  let htBttsYes = 0; // First Half BTTS
-  for (let i = 0; i <= 4; i++) {
-    for (let j = 0; j <= 4; j++) {
+  let htBttsYes = 0;
+  let htOver05 = 0, htOver15 = 0, htOver25 = 0;
+  const htScoreProbs: ScorePrediction[] = [];
+
+  for (let i = 0; i <= 5; i++) {
+    for (let j = 0; j <= 5; j++) {
       const p = poissonProb(htHomeXG, i) * poissonProb(htAwayXG, j);
       if (i > j) htHome += p;
       else if (i === j) htDraw += p;
       else htAway += p;
       if (i > 0 && j > 0) htBttsYes += p;
+      if (i + j >= 1) htOver05 += p;
+      if (i + j >= 2) htOver15 += p;
+      if (i + j >= 3) htOver25 += p;
+      if (p >= 0.02) {
+        htScoreProbs.push({ home: i, away: j, probability: Math.round(p * 1000) / 10 });
+      }
     }
   }
+  htScoreProbs.sort((a, b) => b.probability - a.probability);
+
   const htT = htHome + htDraw + htAway;
   const firstHalf: MarketPrediction = {
     label: 'firstHalf',
@@ -246,6 +258,29 @@ export function generatePredictions(match: Match): MatchPrediction {
     options: [
       { name: 'yes', probability: r1(htBttsYes), recommended: htBttsYes > 0.3 },
       { name: 'no', probability: r1(1 - htBttsYes), recommended: htBttsYes <= 0.3 },
+    ],
+  };
+
+  // First Half Over/Under markets
+  const firstHalfOU05: MarketPrediction = {
+    label: 'firstHalfOU05',
+    options: [
+      { name: 'over', probability: r1(htOver05), recommended: htOver05 > 0.5 },
+      { name: 'under', probability: r1(1 - htOver05), recommended: htOver05 <= 0.5 },
+    ],
+  };
+  const firstHalfOU15: MarketPrediction = {
+    label: 'firstHalfOU15',
+    options: [
+      { name: 'over', probability: r1(htOver15), recommended: htOver15 > 0.5 },
+      { name: 'under', probability: r1(1 - htOver15), recommended: htOver15 <= 0.5 },
+    ],
+  };
+  const firstHalfOU25: MarketPrediction = {
+    label: 'firstHalfOU25',
+    options: [
+      { name: 'over', probability: r1(htOver25), recommended: htOver25 > 0.5 },
+      { name: 'under', probability: r1(1 - htOver25), recommended: htOver25 <= 0.5 },
     ],
   };
 
@@ -509,8 +544,9 @@ export function generatePredictions(match: Match): MatchPrediction {
 
   // --- Categories ---
   const categories: MarketCategory[] = [
-    { id: 'matchResult', icon: 'trophy', markets: [matchResult, doubleChance, firstHalf, htft] },
-    { id: 'goals', icon: 'goal', markets: [overUnder15, overUnder25, overUnder35, btts, firstHalfBtts] },
+    { id: 'matchResult', icon: 'trophy', markets: [matchResult, doubleChance, htft] },
+    { id: 'goals', icon: 'goal', markets: [overUnder15, overUnder25, overUnder35, btts] },
+    { id: 'firstHalf', icon: 'clock', markets: [firstHalf, firstHalfBtts, firstHalfOU05, firstHalfOU15, firstHalfOU25] },
     { id: 'corners', icon: 'corner', markets: [corners85, corners95, corners105] },
     { id: 'cards', icon: 'card', markets: [cards25, cards35, cards45] },
   ];
@@ -523,6 +559,7 @@ export function generatePredictions(match: Match): MatchPrediction {
     mainPrediction: mainPick,
     categories,
     scorePredictions: scoreProbs.slice(0, 6),
+    halfTimeScorePredictions: htScoreProbs.slice(0, 6),
     analysis_tr,
     analysis_en,
   };
