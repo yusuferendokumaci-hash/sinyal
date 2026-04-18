@@ -46,8 +46,8 @@ export function DailyPick({ matches, locale }: DailyPickProps) {
 
   return (
     <div className="bg-card border border-gold/30 rounded-2xl p-5 glow-gold animate-fade-in">
-      {/* Tabs */}
-      <div className="flex items-center gap-1 mb-4 bg-surface rounded-xl p-1 border border-border overflow-x-auto">
+      {/* Tabs - 2x2 grid on mobile, row on desktop */}
+      <div className="grid grid-cols-2 sm:flex sm:items-center gap-1 mb-4 bg-surface rounded-xl p-1 border border-border">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.key;
           const colorClasses = isActive
@@ -61,7 +61,7 @@ export function DailyPick({ matches, locale }: DailyPickProps) {
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[10px] font-bold transition-all whitespace-nowrap ${colorClasses}`}
+              className={`flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg text-[10px] font-bold transition-all whitespace-nowrap sm:flex-1 ${colorClasses}`}
             >
               {tab.icon}
               {locale === 'tr' ? tab.label : tab.labelEn}
