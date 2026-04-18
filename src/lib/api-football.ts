@@ -206,13 +206,15 @@ async function fetchOddsBatch(date: string, fixtureIds?: number[]): Promise<Map<
   if (!fixtureIds || fixtureIds.length === 0) return oddsMap;
 
   // Fetch odds per fixture (max 10 to save API quota - free plan 100/day)
-  const idsToFetch = fixtureIds.slice(0, 8); // Max 8 fixtures odds (1h cache)
+  const idsToFetch = fixtureIds.slice(0, 3); // Max 3 fixtures odds (1h cache) - reduced to prevent rate limit
 
-  const results = await Promise.all(
-    idsToFetch.map(id =>
-      apiFetch<ApiResponse<ApiOddsFixture[]>>('/odds', { fixture: id.toString() })
-    )
-  );
+  // Sequential fetch with delay to avoid rate limiting
+  const results: (ApiResponse<ApiOddsFixture[]> | null)[] = [];
+  for (const id of idsToFetch) {
+    const data = await apiFetch<ApiResponse<ApiOddsFixture[]>>('/odds', { fixture: id.toString() });
+    results.push(data);
+    await new Promise(r => setTimeout(r, 300)); // 300ms delay between requests
+  }
 
   for (const data of results) {
     if (!data?.response?.length) continue;
@@ -452,7 +454,11 @@ async function fetchAllTeamStats(leagueIds: number[]): Promise<Map<number, RealT
   // Free plan only supports 2022-2024 season
   const season = 2024;
 
-  for (const leagueId of leagueIds) {
+  // LIMIT: Only fetch standings for top 5 most important leagues to prevent rate limiting
+  const topLeagueIds = [203, 140, 39, 61, 78, 135, 88, 2, 3, 848]; // Super Lig, La Liga, PL, Ligue 1, Bundesliga, Serie A, Eredivisie, UCL, UEL, UECL
+  const filteredLeagues = leagueIds.filter(id => topLeagueIds.includes(id)).slice(0, 5);
+
+  for (const leagueId of filteredLeagues) {
     const cacheKey = `team-stats-${leagueId}-${season}`;
     const cached = getCached<Map<number, RealTeamStats>>(cacheKey);
     if (cached) {
@@ -465,6 +471,9 @@ async function fetchAllTeamStats(leagueIds: number[]): Promise<Map<number, RealT
       league: leagueId.toString(),
       season: season.toString(),
     });
+
+    // Delay to avoid rate limiting
+    await new Promise(r => setTimeout(r, 500));
 
     if (!data?.response?.[0]) continue;
 
