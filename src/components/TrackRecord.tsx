@@ -36,31 +36,55 @@ export function TrackRecord({ locale }: TrackRecordProps) {
   const [streak, setStreak] = useState({ count: 0, type: 'won' as 'won' | 'lost' });
 
   useEffect(() => {
-    const localStats = getStats();
-    const localHistory = getHistory().slice(0, 10);
+    async function loadResults() {
+      const localStats = getStats();
+      const localHistory = getHistory().slice(0, 10);
 
-    const allResults = [...verifiedResults.map(r => ({
-      id: r.id, date: r.date, matchLabel: r.matchLabel, marketLabel: r.marketLabel,
-      optionName: '', probability: 0, odds: r.odds, result: r.result,
-    })), ...localHistory];
+      // Fetch auto-verified results from API
+      let autoResults: typeof verifiedResults = [];
+      try {
+        const res = await fetch('/api/verify');
+        const data = await res.json();
+        if (data.results?.length > 0) {
+          autoResults = data.results.map((r: any) => ({
+            id: r.id,
+            date: r.date,
+            matchLabel: r.matchLabel,
+            marketLabel: r.marketLabel,
+            odds: r.predictedOdds || 1.5,
+            result: r.result,
+          }));
+        }
+      } catch {}
 
-    const verifiedWon = verifiedResults.filter(r => r.result === 'won').length;
-    const verifiedTotal = verifiedResults.length;
+      // Combine: auto-verified (newest) + manually verified (15 Nisan)
+      const allVerified = [...autoResults, ...verifiedResults];
 
-    const totalWon = localStats.won + verifiedWon;
-    const totalAll = localStats.total + verifiedTotal;
+      const allResults = [...allVerified.map(r => ({
+        id: r.id, date: r.date, matchLabel: r.matchLabel, marketLabel: r.marketLabel,
+        optionName: '', probability: 0, odds: r.odds, result: r.result,
+      })), ...localHistory];
 
-    setStats({
-      total: totalAll,
-      won: totalWon,
-      lost: totalAll - totalWon,
-      winRate: Math.round((totalWon / Math.max(totalAll, 1)) * 100),
-    });
-    setHistory(allResults.slice(0, 10));
+      const verifiedWon = allVerified.filter(r => r.result === 'won').length;
+      const verifiedTotal = allVerified.length;
 
-    // Calculate streak from most recent results
-    const streakData = calcStreak(allResults.filter(r => r.result === 'won' || r.result === 'lost') as { result: 'won' | 'lost' }[]);
-    setStreak(streakData);
+      const totalWon = localStats.won + verifiedWon;
+      const totalAll = localStats.total + verifiedTotal;
+
+      setStats({
+        total: totalAll,
+        won: totalWon,
+        lost: totalAll - totalWon,
+        winRate: Math.round((totalWon / Math.max(totalAll, 1)) * 100),
+      });
+      setHistory(allResults.slice(0, 10));
+
+      // Calculate streak from most recent results
+      const streakData = calcStreak(allResults.filter(r => r.result === 'won' || r.result === 'lost') as { result: 'won' | 'lost' }[]);
+      setStreak(streakData);
+    }
+
+    loadResults();
   }, []);
 
   const handleClear = () => {
