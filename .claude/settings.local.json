@@ -43,7 +43,9 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://sinyal-bay.vercel.app\")",
       "Bash(curl -s \"https://sinyal.vercel.app\")",
       "Bash(curl -s \"https://sinyal-bay.vercel.app/api/telegram?secret=sinyal2026\")",
-      "Bash(node -e \"const c=[];process.stdin.on\\('data',d=>c.push\\(d\\)\\);process.stdin.on\\('end',\\(\\)=>{console.log\\(Buffer.concat\\(c\\).toString\\(\\)\\);}\\)\")"
+      "Bash(node -e \"const c=[];process.stdin.on\\('data',d=>c.push\\(d\\)\\);process.stdin.on\\('end',\\(\\)=>{console.log\\(Buffer.concat\\(c\\).toString\\(\\)\\);}\\)\")",
+      "Bash(ffprobe -v error -select_streams v:0 -show_entries stream=width,height,duration -of csv=p=0 \"C:/Users/yusuf/OneDrive/Masaüstü/video.mp4\")",
+      "Bash(node -e ' *)"
     ]
   }
 }

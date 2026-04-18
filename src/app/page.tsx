@@ -22,7 +22,21 @@ import {
 
 export default function Home() {
   const [locale, setLocale] = useState<Locale>('tr');
-  const [selectedMatch, setSelectedMatch] = useState<string | null>(null);
+  const [selectedMatch, setSelectedMatchInner] = useState<string | null>(null);
+  const [scrollPos, setScrollPos] = useState<number>(0);
+
+  // Custom wrapper to save/restore scroll position
+  const setSelectedMatch = (id: string | null) => {
+    if (id) {
+      // Going to detail: save current scroll
+      setScrollPos(window.scrollY);
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    } else {
+      // Going back: restore previous scroll
+      setTimeout(() => window.scrollTo({ top: scrollPos, behavior: 'instant' }), 0);
+    }
+    setSelectedMatchInner(id);
+  };
   const [selectedLeague, setSelectedLeague] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'matches' | 'standings' | 'favorites'>('matches');
   const [showLeagueFilter, setShowLeagueFilter] = useState(false);
